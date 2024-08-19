@@ -1,5 +1,6 @@
 package com.virtualclassroom.authrestapi.services.impl;
 
+import com.virtualclassroom.authrestapi.services.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,8 +14,8 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-public class JWTServiceImpl {
-    private String generateToken(UserDetails userDetails){
+public class JWTServiceImpl implements JWTService {
+    public String generateToken(UserDetails userDetails){
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
