@@ -40,4 +40,13 @@ public class JWTServiceImpl {
      byte[] key = Decoders.BASE64.decode("413F4428472B4B6250655368566D5970337336763979244226452948404D6351");
      return Keys.hmacShaKeyFor(key);
     }
+
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        final String username = extractUserName(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
+    }
 }
