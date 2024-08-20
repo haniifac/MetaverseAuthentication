@@ -1,6 +1,8 @@
 package com.virtualclassroom.authrestapi.controller;
 
+import com.virtualclassroom.authrestapi.dto.JwtAuthenticationResponse;
 import com.virtualclassroom.authrestapi.dto.SignUpRequest;
+import com.virtualclassroom.authrestapi.dto.SigninRequest;
 import com.virtualclassroom.authrestapi.entities.User;
 import com.virtualclassroom.authrestapi.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -22,4 +24,12 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.signup(signUpRequest));
 
     }
+
+    @PostMapping("/signin")
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest signinRequest){
+        return ResponseEntity.ok(authenticationService.signin(signinRequest));
+
+    }
+
+
 }

@@ -37,6 +37,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (StringUtils.isEmpty(authHeader) || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bearer ")){
+            System.out.println("[LOGGING] REQUEST = " + request);
+            System.out.println("[LOGGING] RESPONSE = " + response);
             filterChain.doFilter(request, response);
             return;
         }
