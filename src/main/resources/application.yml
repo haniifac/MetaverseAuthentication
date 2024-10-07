@@ -1,0 +1,76 @@
+spring:
+  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/srm?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+#    username: root
+#    password:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
+        ## Enable jdbc batch inserts.
+        jdbc.batch_size: 4
+        order_inserts: true
+        javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
+        cache:
+          ## Enable L2 cache
+          region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory #jcache
+          use_second_level_cache: true
+          use_query_cache: true
+      jakarta.persistence.sharedCache.mode: ENABLE_SELECTIVE
+  #for dummy data
+  sql:
+    init:
+      data-locations: classpath:data-sample.sql
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC0CszIYI8wlobG4pPOwb5TGYpJBRwsZH9
+    tokenExpirationDay: 1
+  oauth2:
+    googleClientId: 118435807079-p3c6j2v8buos0emcst2olthij71krin6.apps.googleusercontent.com
+    googleSecret: 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
+  EmailRegex:
+    ti: "^[a-zA-Z0-9+.]+[@]{1}+[t]{1}+[i]{1}+[.]{1}+[u]{1}+[k]{1}+[d]{1}+[w]{1}+[.]{1}+[a]{1}+[c]{1}+[.]{1}+[i]{1}+[d]{1}+$"
+    si: "^[a-zA-Z0-9+.]+[@]{1}+[s]{1}+[i]{1}+[.]{1}+[u]{1}+[k]{1}+[d]{1}+[w]{1}+[.]{1}+[a]{1}+[c]{1}+[.]{1}+[i]{1}+[d]{1}+$"
+    staff: "^[a-zA-Z0-9+.]+[@]{1}+[s]{1}+[t]{1}+[a]{1}+[f]{1}+[f]{1}+[.]{1}+[u]{1}+[k]{1}+[d]{1}+[w]{1}+[.]{1}+[a]{1}+[c]{1}+[.]{1}+[i]{1}+[d]{1}+$"
+  excludeFilter:
+    - "/test"
+    - "/auth/signin"
+    - "/auth/signup"
+    - "/auth/signout"
+    - "/auth/refreshAccessToken"
+    - "/auth/verifyAccessToken"
+    - "/auth/revoke"
+    - "/auth/signupServerAuthCode"
+    - "/swagger-ui.html"
+    - "/configuration/ui"
+    - "/swagger-resources/**"
+    - "/configuration/security"
+    - "/webjars/**"
+    - "/v2/api-docs"
+  notificationConfig:
+    sound: "default"
+    color: "#FFFF00"
+
+#logging.level.com.srmbe.service.googleoauth.OAuth2GoogleApiClient: DEBUG
+#logging.level.com.srmbe.service.googleoauth.GoogleApiClient: DEBUG
+token:
+  signing:
+    key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
