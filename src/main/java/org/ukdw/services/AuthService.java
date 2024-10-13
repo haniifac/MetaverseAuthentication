@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
@@ -55,6 +57,11 @@ public class AuthService {
         newUser.setPassword(request.getPassword());
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
+        newUser.setGender(request.getGender());
+        newUser.setInputDate(Date.from(Instant.now()));
+        newUser.setDayOfBirth(request.getDayOfBirth());
+        newUser.setBirthPlace(request.getBirthPlace());
+        newUser.setAddress(request.getAddress());
         GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
         newUser.getGroups().add(studentGroup);
 
@@ -65,11 +72,16 @@ public class AuthService {
 
     public TeacherEntity signupTeacher(SignUpRequest request) {
         TeacherEntity newUser = new TeacherEntity();
+        newUser.setTeacherId(request.getTeacherId());
         newUser.setEmail(request.getEmail());
         newUser.setPassword(request.getPassword());
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
-        newUser.setTeacherId(request.getTeacherId());
+        newUser.setGender(request.getGender());
+        newUser.setInputDate(Date.from(Instant.now()));
+        newUser.setDayOfBirth(request.getDayOfBirth());
+        newUser.setBirthPlace(request.getBirthPlace());
+        newUser.setAddress(request.getAddress());
         GroupEntity studentGroup = groupService.findByGroupname("TEACHER");
         newUser.getGroups().add(studentGroup);
 

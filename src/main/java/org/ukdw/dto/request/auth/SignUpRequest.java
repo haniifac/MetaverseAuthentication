@@ -43,8 +43,15 @@ public class SignUpRequest {
 
     private String teacherId;
 
-    //registration number
+    private String dayOfBirth;
 
+    private String birthPlace;
+
+    private String address;
+
+    private String gender;
+
+    //registration number
     private String regNumber;
 
 //    private String role;

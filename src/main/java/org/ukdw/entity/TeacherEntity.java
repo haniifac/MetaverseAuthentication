@@ -32,16 +32,16 @@ public class TeacherEntity extends UserAccountEntity{
     String gender;
 
     @Column(name="day_of_birth")
-    String day_of_birth;
+    String dayOfBirth;
 
     @Column(name="birth_place")
-    String birth_place;
+    String birthPlace;
 
     @Column(name="address")
     String address;
 
     @Column(name="input_date")
-    Date input_date;
+    Date inputDate;
 
     @Column(name = "url_google_scholar")
     String url_google_scholar;
