@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.ukdw.dto.request.auth.*;
 import org.ukdw.dto.response.RefreshAccessTokenResponse;
 import org.ukdw.dto.response.ResponseWrapper;
+import org.ukdw.entity.StudentEntity;
+import org.ukdw.entity.TeacherEntity;
 import org.ukdw.entity.UserAccountEntity;
 import org.ukdw.exception.InvalidTokenException;
 import org.ukdw.services.AuthService;
@@ -39,6 +41,22 @@ public class AuthController {
             @RequestBody SignInRequest request) {
         UserAccountEntity userEntity = authService.signIn(request.getEmail(), request.getPassword());
         ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), userEntity);
+        return ResponseEntity.ok(response);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/signup/student", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signupStudent(@RequestBody SignUpRequest request) {
+        StudentEntity newUser = authService.signupStudent(request);
+        ResponseWrapper<StudentEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), newUser);
+        return ResponseEntity.ok(response);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/signup/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signupTeacher(@RequestBody SignUpRequest request) {
+        TeacherEntity newUser = authService.signupTeacher(request);
+        ResponseWrapper<TeacherEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), newUser);
         return ResponseEntity.ok(response);
     }
 

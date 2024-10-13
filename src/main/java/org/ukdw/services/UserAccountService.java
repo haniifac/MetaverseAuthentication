@@ -35,8 +35,8 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void createUserAccount(UserAccountEntity userAccount) {
-        userAccountRepository.save(userAccount);
+    public UserAccountEntity createUserAccount(UserAccountEntity userAccount) {
+        return userAccountRepository.save(userAccount);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

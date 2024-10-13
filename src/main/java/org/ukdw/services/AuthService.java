@@ -8,13 +8,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.ukdw.dto.request.auth.SignUpRequest;
 import org.ukdw.dto.response.JwtAuthenticationResponse;
 import org.ukdw.dto.user.UserRoleDTO;
-import org.ukdw.entity.CustomUserDetails;
+import org.ukdw.entity.*;
 import org.ukdw.exception.AuthenticationExceptionImpl;
 import org.ukdw.exception.BadRequestException;
 import org.ukdw.exception.ScNotFoundException;
 import org.ukdw.exception.InvalidTokenException;
 import org.ukdw.filter.EmailValidation;
-import org.ukdw.entity.UserAccountEntity;
 import org.ukdw.repository.UserAccountRepository;
 import org.ukdw.util.GoogleTokenVerifier;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashSet;
 
 /**
  * <p>
@@ -52,15 +52,42 @@ public class AuthService {
 
     private final JwtService jwtService;
 
-    /*public JwtAuthenticationResponse signup(SignUpRequest request) {
-        UserAccountEntity user = UserAccountEntity.builder()
-                .firstName(request.getFirstName()).lastName(request.getLastName())
-                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER).build();
-        userRepository.save(user);
-        var jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(jwt).build();
-    }*/
+    public StudentEntity signupStudent(SignUpRequest request) {
+        StudentEntity newUser = new StudentEntity();
+        newUser.setStudentId(request.getStudentId());
+        newUser.setEmail(request.getEmail());
+        newUser.setPassword(request.getPassword());
+        newUser.setUsername(request.getUsername());
+        newUser.setName(request.getName());
+
+        long newUserId = userAccountService.createUserAccount(newUser).getId();
+
+        // add newUser to group "STUDENT"
+        // GroupEntity should be filled with GroupEntity(newUser.id, 1)
+        GroupEntity userGroup = new GroupEntity();
+        userGroup.setId(newUserId);
+        userGroup.setGroupname("STUDENT");
+        newUser.getGroups().add(userGroup);
+
+        return newUser;
+    }
+
+    public TeacherEntity signupTeacher(SignUpRequest request) {
+        TeacherEntity newUser = new TeacherEntity();
+        newUser.setEmail(request.getEmail());
+        newUser.setPassword(request.getPassword());
+        newUser.setUsername(request.getUsername());
+        newUser.setName(request.getName());
+//        newUser.setGroups(new HashSet<>(){});
+//                .firstName(request.getFirstName()).lastName(request.getLastName())
+//                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
+//                .role(Role.USER).build();
+//        userRepository.save(user);
+        userAccountService.createUserAccount(newUser);
+        return newUser;
+//        var jwt = jwtService.generateToken(user);
+//        return JwtAuthenticationResponse.builder().token(jwt).build();
+    }
 
     public boolean signUpWithGoogleAuthCode(String authCode, String regNumber, String role, String clientType)
             throws InvalidTokenException {

@@ -30,4 +30,7 @@ public class GroupEntity implements Serializable {
     @ManyToMany(mappedBy = "groups")
     @JsonBackReference // Prevent recursion by indicating this is the "back" side of the relationship
     private Set<UserAccountEntity> users = new HashSet<>();
+
+    @Column(name = "role_binary")
+    private String roleBinary;
 }
