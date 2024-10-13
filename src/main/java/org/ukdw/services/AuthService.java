@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import org.h2.engine.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukdw.dto.request.auth.SignUpRequest;
 import org.ukdw.dto.response.JwtAuthenticationResponse;
 import org.ukdw.dto.user.UserRoleDTO;
@@ -39,19 +40,12 @@ import java.util.HashSet;
 public class AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-
     private final UserAccountService userAccountService;
-
     private final UserRoleService roleService;
-
     private final EmailValidation emailValidation;
-
     private final GoogleTokenVerifier googleTokenVerifier;
-
     private final UserAccountRepository userAccountRepository;
-
     private final GroupService groupService;
-
     private final JwtService jwtService;
 
     public StudentEntity signupStudent(SignUpRequest request) {
@@ -61,13 +55,10 @@ public class AuthService {
         newUser.setPassword(request.getPassword());
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
-
-        userAccountService.createUserAccount(newUser);
-
         GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
         newUser.getGroups().add(studentGroup);
 
-        userAccountService.updateUserAccount(newUser);
+        userAccountService.createUserAccount(newUser);
 
         return newUser;
     }
@@ -79,20 +70,10 @@ public class AuthService {
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
         newUser.setTeacherId(request.getTeacherId());
-
-//        newUser.setGroups(new HashSet<>(){});
-//                .firstName(request.getFirstName()).lastName(request.getLastName())
-//                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-//                .role(Role.USER).build();
-//        userRepository.save(user);
-
-        userAccountService.createUserAccount(newUser);
-
         GroupEntity studentGroup = groupService.findByGroupname("TEACHER");
         newUser.getGroups().add(studentGroup);
 
-        userAccountService.updateUserAccount(newUser);
-
+        userAccountService.createUserAccount(newUser);
         return newUser;
 
 //        var jwt = jwtService.generateToken(user);
