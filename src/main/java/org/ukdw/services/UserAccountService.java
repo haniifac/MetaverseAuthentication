@@ -45,5 +45,10 @@ public class UserAccountService {
         return person.orElse(null);
     }
 
+    @Transactional
+    public UserAccountEntity updateUserAccount(UserAccountEntity updatedUser){
+        return userAccountRepository.save(updatedUser);
+    }
+
 
 }

@@ -50,6 +50,8 @@ public class AuthService {
 
     private final UserAccountRepository userAccountRepository;
 
+    private final GroupService groupService;
+
     private final JwtService jwtService;
 
     public StudentEntity signupStudent(SignUpRequest request) {
@@ -60,14 +62,12 @@ public class AuthService {
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
 
-        long newUserId = userAccountService.createUserAccount(newUser).getId();
+        userAccountService.createUserAccount(newUser);
 
-        // add newUser to group "STUDENT"
-        // GroupEntity should be filled with GroupEntity(newUser.id, 1)
-        GroupEntity userGroup = new GroupEntity();
-        userGroup.setId(newUserId);
-        userGroup.setGroupname("STUDENT");
-        newUser.getGroups().add(userGroup);
+        GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
+        newUser.getGroups().add(studentGroup);
+
+        userAccountService.updateUserAccount(newUser);
 
         return newUser;
     }
@@ -78,13 +78,23 @@ public class AuthService {
         newUser.setPassword(request.getPassword());
         newUser.setUsername(request.getUsername());
         newUser.setName(request.getName());
+        newUser.setTeacherId(request.getTeacherId());
+
 //        newUser.setGroups(new HashSet<>(){});
 //                .firstName(request.getFirstName()).lastName(request.getLastName())
 //                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
 //                .role(Role.USER).build();
 //        userRepository.save(user);
+
         userAccountService.createUserAccount(newUser);
+
+        GroupEntity studentGroup = groupService.findByGroupname("TEACHER");
+        newUser.getGroups().add(studentGroup);
+
+        userAccountService.updateUserAccount(newUser);
+
         return newUser;
+
 //        var jwt = jwtService.generateToken(user);
 //        return JwtAuthenticationResponse.builder().token(jwt).build();
     }

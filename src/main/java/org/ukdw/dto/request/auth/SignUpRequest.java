@@ -39,8 +39,9 @@ public class SignUpRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "studentId is required")
     private String studentId;
+
+    private String teacherId;
 
     //registration number
 
