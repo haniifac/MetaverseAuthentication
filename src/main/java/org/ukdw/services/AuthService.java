@@ -62,11 +62,12 @@ public class AuthService {
         newUser.setDayOfBirth(request.getDayOfBirth());
         newUser.setBirthPlace(request.getBirthPlace());
         newUser.setAddress(request.getAddress());
+
         GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
+//        studentGroup.addRoleOrPermission(RolePermissionConstants.ROLE_STUDENT);
         newUser.getGroups().add(studentGroup);
 
         userAccountService.createUserAccount(newUser);
-
         return newUser;
     }
 
@@ -82,8 +83,10 @@ public class AuthService {
         newUser.setDayOfBirth(request.getDayOfBirth());
         newUser.setBirthPlace(request.getBirthPlace());
         newUser.setAddress(request.getAddress());
-        GroupEntity studentGroup = groupService.findByGroupname("TEACHER");
-        newUser.getGroups().add(studentGroup);
+
+        GroupEntity teacherGroup = groupService.findByGroupname("TEACHER");
+//        teacherGroup.addRoleOrPermission(RolePermissionConstants.ROLE_TEACHER);
+        newUser.getGroups().add(teacherGroup);
 
         userAccountService.createUserAccount(newUser);
         return newUser;

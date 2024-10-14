@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,24 @@ public class GroupEntity implements Serializable {
     @JsonBackReference // Prevent recursion by indicating this is the "back" side of the relationship
     private Set<UserAccountEntity> users = new HashSet<>();
 
-    @Column(name = "role_binary")
-    private String roleBinary;
+    // store roles and permission as a bitmask type
+    @Column(name = "role_binary", columnDefinition = "BIGINT DEFAULT 0")
+    private long roleBinary;
+
+    /**
+     * <p>Add roles/permissions using bitwise OR </p>
+     * @param permission bitmask representation of role / permission
+     */
+    // Add roles/permissions using bitwise OR
+    public void addRoleOrPermission(long permission) {
+        this.roleBinary |= permission;
+    }
+
+    /**
+     * <p>Check if a specific permission is present using bitwise AND </p>
+     * @param permission bitmask representation of role / permission
+     */
+    public boolean hasPermission(long permission) {
+        return (this.roleBinary & permission) != 0;
+    }
 }
