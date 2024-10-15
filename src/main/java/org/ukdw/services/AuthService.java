@@ -51,17 +51,13 @@ public class AuthService {
     private final JwtService jwtService;
 
     public StudentEntity signupStudent(SignUpRequest request) {
-        StudentEntity newUser = new StudentEntity();
-        newUser.setStudentId(request.getStudentId());
-        newUser.setEmail(request.getEmail());
-        newUser.setPassword(request.getPassword());
-        newUser.setUsername(request.getUsername());
-        newUser.setName(request.getName());
-        newUser.setGender(request.getGender());
+        StudentEntity newUser = new StudentEntity(
+                request.getUsername(), request.getPassword(), request.getRegNumber(), request.getEmail(),
+                request.getImageUrl(), request.getStudentId(), request.getRegisterYear(), request.getName(), request.getGender(),
+                request.getDayOfBirth(), request.getBirthPlace(), request.getAddress()
+        );
         newUser.setInputDate(Date.from(Instant.now()));
-        newUser.setDayOfBirth(request.getDayOfBirth());
-        newUser.setBirthPlace(request.getBirthPlace());
-        newUser.setAddress(request.getAddress());
+
 
         GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
 //        studentGroup.addRoleOrPermission(RolePermissionConstants.ROLE_STUDENT);
@@ -72,17 +68,12 @@ public class AuthService {
     }
 
     public TeacherEntity signupTeacher(SignUpRequest request) {
-        TeacherEntity newUser = new TeacherEntity();
-        newUser.setTeacherId(request.getTeacherId());
-        newUser.setEmail(request.getEmail());
-        newUser.setPassword(request.getPassword());
-        newUser.setUsername(request.getUsername());
-        newUser.setName(request.getName());
-        newUser.setGender(request.getGender());
+        TeacherEntity newUser = new TeacherEntity(
+                request.getUsername(), request.getPassword(), request.getRegNumber(), request.getEmail(), request.getImageUrl(),
+                request.getTeacherId(), request.getEmploymentNumber(), request.getName(), request.getGender(), request.getDayOfBirth(),
+                request.getBirthPlace(), request.getAddress(), request.getUrlGoogleScholar()
+        );
         newUser.setInputDate(Date.from(Instant.now()));
-        newUser.setDayOfBirth(request.getDayOfBirth());
-        newUser.setBirthPlace(request.getBirthPlace());
-        newUser.setAddress(request.getAddress());
 
         GroupEntity teacherGroup = groupService.findByGroupname("TEACHER");
 //        teacherGroup.addRoleOrPermission(RolePermissionConstants.ROLE_TEACHER);

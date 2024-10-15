@@ -68,8 +68,30 @@ public class UserAccountEntity {
     @JsonManagedReference // Prevent recursion by indicating this is the "forward" side of the relationship
     private Set<GroupEntity> groups = new HashSet<>();
 
-    public UserAccountEntity() {
+    public UserAccountEntity() {}
 
+    public UserAccountEntity(
+            long id,
+            String username,
+            String password,
+            String accessToken,
+            String idToken,
+            String refreshToken,
+            String fcmToken,
+            String regNumber,
+            String email,
+            String imageUrl
+    ){
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.accessToken = accessToken;
+        this.idToken = idToken;
+        this.refreshToken = refreshToken;
+        this.fcmToken = fcmToken;
+        this.regNumber = regNumber;
+        this.email = email;
+        this.imageUrl = imageUrl;
     }
 
     public UserAccountEntity(String accessToken, String idToken, String refreshToken,
@@ -79,6 +101,16 @@ public class UserAccountEntity {
         this.idToken = idToken;
         this.refreshToken = refreshToken;
         this.regNumber = nomorInduk;
+        this.email = email;
+        this.imageUrl = imageUrl;
+    }
+
+    public UserAccountEntity(
+            String username, String password, String regNumber, String email, String imageUrl
+    ){
+        this.username = username;
+        this.password = password;
+        this.regNumber = regNumber;
         this.email = email;
         this.imageUrl = imageUrl;
     }

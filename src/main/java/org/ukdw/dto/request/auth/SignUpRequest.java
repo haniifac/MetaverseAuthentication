@@ -54,5 +54,13 @@ public class SignUpRequest {
     //registration number
     private String regNumber;
 
+    private String imageUrl;
+
+    private String registerYear;
+
+    private String employmentNumber;
+
+    private String urlGoogleScholar;
+
 //    private String role;
 }

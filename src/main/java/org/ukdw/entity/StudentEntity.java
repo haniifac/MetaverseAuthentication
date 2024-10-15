@@ -45,4 +45,30 @@ public class StudentEntity extends UserAccountEntity{
 
     @Column(name="input_date")
     Date inputDate;
+
+    public StudentEntity() {}
+
+    public StudentEntity(
+            String username,
+            String password,
+            String regNumber,
+            String email,
+            String imageUrl,
+            String studentId,
+            String registerYear,
+            String name,
+            String gender,
+            String dayOfBirth,
+            String birthPlace,
+            String address
+    ) {
+        super(username, password, regNumber, email, imageUrl);
+        this.studentId = studentId;
+        this.registerYear = registerYear;
+        this.name = name;
+        this.gender = gender;
+        this.dayOfBirth = dayOfBirth;
+        this.birthPlace = birthPlace;
+        this.address = address;
+    }
 }

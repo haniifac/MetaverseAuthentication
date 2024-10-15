@@ -45,4 +45,32 @@ public class TeacherEntity extends UserAccountEntity{
 
     @Column(name = "url_google_scholar")
     String url_google_scholar;
+
+    public TeacherEntity() {}
+
+    public TeacherEntity(
+            String username,
+            String password,
+            String regNumber,
+            String email,
+            String imageUrl,
+            String teacherId,
+            String employment_number,
+            String name,
+            String gender,
+            String dayOfBirth,
+            String birthPlace,
+            String address,
+            String url_google_scholar
+    ){
+        super(username, password, regNumber, email, imageUrl);
+        this.teacherId = teacherId;
+        this.employment_number = employment_number;
+        this.name = name;
+        this.gender = gender;
+        this.dayOfBirth = dayOfBirth;
+        this.birthPlace = birthPlace;
+        this.address = address;
+        this.url_google_scholar = url_google_scholar;
+    }
 }
