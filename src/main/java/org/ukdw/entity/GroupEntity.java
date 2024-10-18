@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,8 +32,8 @@ public class GroupEntity implements Serializable {
     private Set<UserAccountEntity> users = new HashSet<>();
 
     // store roles and permission as a bitmask type
-    @Column(name = "role_binary", columnDefinition = "BIGINT DEFAULT 0")
-    private long roleBinary;
+    @Column(name = "permission", columnDefinition = "BIGINT DEFAULT 0")
+    private long permission;
 
     /**
      * <p>Add roles/permissions using bitwise OR </p>
@@ -42,7 +41,7 @@ public class GroupEntity implements Serializable {
      */
     // Add roles/permissions using bitwise OR
     public void addRoleOrPermission(long permission) {
-        this.roleBinary |= permission;
+        this.permission |= permission;
     }
 
     /**
@@ -50,6 +49,6 @@ public class GroupEntity implements Serializable {
      * @param permission bitmask representation of role / permission
      */
     public boolean hasPermission(long permission) {
-        return (this.roleBinary & permission) != 0;
+        return (this.permission & permission) != 0;
     }
 }

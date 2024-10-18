@@ -1,6 +1,8 @@
 package org.ukdw.dto.request.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,9 @@ public class SignInRequest {
 //    private String serverAuthCode;
 //@JsonProperty("clientType")
 //private String clientType;
+    @NotBlank(message = "email is required")
     private String email;
+
+    @NotBlank(message = "email is required")
     private String password;
 }
