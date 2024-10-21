@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cfdac06a-cd36-432d-9400-2a9c22727c7c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/controller/GroupController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/controller/UserAccountController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/dto/request/common/CheckAccessRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/dto/request/auth/SignUpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/dto/request/auth/SignUpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/StudentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/StudentEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/TeacherEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/TeacherEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/UserAccountEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/entity/UserAccountEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/controller/DummyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/controller/DummyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/repository/UserAccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/repository/UserAccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/services/AccessControlService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/services/AccessControlService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ukdw/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ukdw/services/AuthService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,14 +41,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.AppMain.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.AppMain.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="AppMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.ukdw.AppMain" />
@@ -81,5 +80,16 @@
       <updated>1728916806065</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

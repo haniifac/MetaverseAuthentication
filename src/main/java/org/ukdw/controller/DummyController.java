@@ -2,13 +2,17 @@ package org.ukdw.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.ukdw.dto.request.auth.SignUpRequest;
+import org.ukdw.dto.request.common.CheckAccessRequest;
 import org.ukdw.dto.response.ResponseWrapper;
+import org.ukdw.entity.RolePermissionConstants;
 import org.ukdw.entity.StudentEntity;
 import org.ukdw.entity.UserAccountEntity;
+import org.ukdw.services.AccessControlService;
 import org.ukdw.services.UserAccountService;
 
 import java.util.List;
@@ -18,20 +22,11 @@ import java.util.List;
 public class DummyController {
 
     private final UserAccountService userAccountService;
+    private final AccessControlService accessControlService;
 
     //dummy sample
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
-//        return ResponseEntity.ok(new ResponseWrapper("Hello from public API"));
-//        List<UserAccountEntity> users = userAccountService.listUserAccount();
-//        return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), users));
-
-//        StudentEntity studentEntity = new StudentEntity();
-//        studentEntity.setEmail("teststudent@mail.com");
-//        studentEntity.setPassword("Test");
-//        studentEntity.setName("Test");
-//        studentEntity.setStudentId("std256");
-//        userAccountService.createUserAccount(studentEntity);
         List<UserAccountEntity> users = userAccountService.listUserAccount();
         return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), users));
     }
@@ -40,6 +35,17 @@ public class DummyController {
     @GetMapping("/restricted")
     public ResponseEntity<?> restricted() {
         return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), "Hello from restricted API"));
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/check-access")
+    public ResponseEntity<?> checkAccess(@RequestBody CheckAccessRequest request) {
+        boolean hasAccess = accessControlService.canAccessResource(request.getUsername(), request.getPermissionId());
+        if (hasAccess) {
+            return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), String.format("User '%s' permitted to access classroom.",request.getUsername()), ""));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(new ResponseWrapper<>(HttpStatus.FORBIDDEN.value(), String.format("User '%s' forbidden to access classroom.", request.getUsername()), ""));
+        }
     }
 
     @PreAuthorize("hasRole(T(org.ukdw.entity.AuthoritiesConstants).ROLE_ADMIN.name())")

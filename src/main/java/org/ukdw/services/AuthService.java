@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import org.h2.engine.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukdw.dto.request.auth.SignUpRequest;
 import org.ukdw.dto.response.JwtAuthenticationResponse;
@@ -250,7 +251,8 @@ public class AuthService {
 
     public UserDetailsService userDetailsService() {
         return username -> {
-            UserAccountEntity accountEntity = userAccountRepository.findByUsername(username);
+            UserAccountEntity accountEntity = userAccountRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             return new CustomUserDetails(accountEntity);
             /*return userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));*/
