@@ -55,8 +55,7 @@ public class ResponseWrapper<T> {
 		this.data = data;
 		if(status == HttpStatus.OK.value()) {
 			this.message = "Data fetched successfully";
-		}
-		else {
+		} else {
 			this.message = "";
 		}
 	}

@@ -23,7 +23,9 @@ import java.util.Set;
 @Table(name = "groups")
 public class GroupEntity implements Serializable {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GROUP_SEQ")
+    @SequenceGenerator(name = "GROUP_SEQ", sequenceName = "GROUP_SEQ", allocationSize = 1)
+    private long id;
 
     @Column(name = "groupname", nullable = false)
     private String groupname;
