@@ -35,12 +35,12 @@ public class GroupService {
 
     public Optional<GroupEntity> updateGroup(Long id, GroupDTO groupDetails) {
         return groupRepository.findById(id).map(group -> {
-            if(groupDetails.getGroupname() != null){
-                group.setGroupname(groupDetails.getGroupname());
+            if(groupDetails.getGroupname().isPresent()){
+                group.setGroupname(groupDetails.getGroupname().get());
             }
 
-            if(groupDetails.getRoleBinary() != null){
-            group.setRoleBinary(groupDetails.getRoleBinary());
+            if(groupDetails.getPermission().isPresent()){
+            group.setPermission(groupDetails.getPermission().get());
 
             }
             return groupRepository.save(group);

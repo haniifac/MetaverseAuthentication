@@ -43,9 +43,13 @@ public class GroupController {
     @ResponseBody
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createGroup(@RequestBody GroupDTO request) {
+        if(request.getGroupname().isEmpty() || request.getPermission().isEmpty()) {
+            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.BAD_REQUEST.value(), "Request Parameter Error"));
+        }
+
         GroupEntity newGroup = new GroupEntity();
-        newGroup.setGroupname(request.getGroupname());
-        newGroup.setRoleBinary(request.getRoleBinary());
+        newGroup.setGroupname(request.getGroupname().get());
+        newGroup.setPermission(request.getPermission().get());
 
         GroupEntity createdGroup = groupService.createGroup(newGroup);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdGroup);
@@ -54,10 +58,14 @@ public class GroupController {
     // PUT - Update a group by ID
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<GroupEntity> updateGroup(@PathVariable(value = "id") Long id, @RequestBody GroupDTO updateRequest) {
+    public ResponseEntity<?> updateGroup(@PathVariable(value = "id") Long id, @RequestBody GroupDTO updateRequest) {
         Optional<GroupEntity> updatedGroup = groupService.updateGroup(id, updateRequest);
-        return updatedGroup.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (updatedGroup.isPresent()){
+            return ResponseEntity.ok(updatedGroup);
+        }else{
+            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id: %s not found", id), null));
+        }
+
     }
 
     // DELETE - Remove a group by ID
