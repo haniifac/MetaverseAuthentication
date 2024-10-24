@@ -2,9 +2,9 @@
 
 -- noinspection SqlNoDataSourceInspectionForFile
 
-insert into groups (ID, groupname, permission) values ((NEXTVAL('GROUP_SEQ'),'STUDENT', 1);
-insert into groups (ID, groupname, permission) values ((NEXTVAL('GROUP_SEQ'),'TEACHER',3);
-insert into groups (ID, groupname, permission) values ((NEXTVAL('GROUP_SEQ'),'ADMIN',7);
+insert into groups (ID, groupname, permission) values (1,'STUDENT', 1);
+insert into groups (ID, groupname, permission) values (2,'TEACHER',3);
+insert into groups (ID, groupname, permission) values (3,'ADMIN',7);
 
 insert into user_account (ID, username, password, ACCESS_TOKEN, ID_TOKEN, REFRESH_TOKEN, FCM_TOKEN, REG_NUMBER, EMAIL, IMAGE_URL)
 values (NEXTVAL('USER_SEQ'), 'dendy', 'qwe123', '', '' , '', '', 'TCR001', 'dendy.prtha@staff.ukdw.ac.id', '');

@@ -2,13 +2,11 @@ package org.ukdw.services;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import org.h2.engine.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukdw.dto.request.auth.SignUpRequest;
-import org.ukdw.dto.response.JwtAuthenticationResponse;
 import org.ukdw.dto.user.UserRoleDTO;
 import org.ukdw.entity.*;
 import org.ukdw.exception.AuthenticationExceptionImpl;
@@ -27,7 +25,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 /**
  * <p>
@@ -35,7 +37,7 @@ import java.util.HashSet;
  * Date: 8/29/2020
  * Time: 7:52 AM
  * <p>
- * Description : service for auth process
+ * Description : service for authentication & authorization process
  */
 
 @Service
@@ -257,5 +259,25 @@ public class AuthService {
             /*return userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));*/
         };
+    }
+
+    public Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public boolean canAccessFeature(int requiredPermission) {
+        Authentication authentication = getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String currentUserName = authentication.getName();
+            Set<GroupEntity> groups = userDetails.getUserAccountEntity().getGroups();
+            //check each permission on each group
+            for (GroupEntity group : groups) {
+                if (group.hasPermission(requiredPermission)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
