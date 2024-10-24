@@ -51,6 +51,10 @@ public class GroupEntity implements Serializable {
      * @param permission bitmask representation of role / permission
      */
     public boolean hasPermission(long permission) {
-        return (this.permission & permission) != 0;
+        if (permission >= this.permission){
+            return (this.permission & permission) == permission;
+        }else{
+            return (this.permission & permission) != 0;
+        }
     }
 }
