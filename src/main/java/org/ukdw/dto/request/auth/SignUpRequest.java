@@ -38,29 +38,18 @@ public class SignUpRequest {
 
     @NotBlank(message = "Name is required")
     private String name;
-
-    private String studentId;
-
-    private String teacherId;
-
-    private String dayOfBirth;
-
-    private String birthPlace;
-
-    private String address;
-
-    private String gender;
-
+    private String imageUrl;
     //registration number
     private String regNumber;
 
-    private String imageUrl;
-
+    private String studentId;
+    private String teacherId;
+    private String dayOfBirth;
+    private String birthPlace;
+    private String address;
+    private String gender;
     private String registerYear;
-
     private String employmentNumber;
-
     private String urlGoogleScholar;
-
 //    private String role;
 }

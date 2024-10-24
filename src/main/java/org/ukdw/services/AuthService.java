@@ -271,6 +271,7 @@ public class AuthService {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             String currentUserName = authentication.getName();
             Set<GroupEntity> groups = userDetails.getUserAccountEntity().getGroups();
+
             //check each permission on each group
             for (GroupEntity group : groups) {
                 if (group.hasPermission(requiredPermission)) {

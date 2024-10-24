@@ -6,14 +6,9 @@ import lombok.Data;
 public class UserAccountDTO {
 
     String idUser;
-
     String nama;
-
     String email;
-
     String role;
-
     String refreshToken;
-
     String fcmToken;
 }
