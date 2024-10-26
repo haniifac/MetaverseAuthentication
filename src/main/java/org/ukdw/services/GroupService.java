@@ -54,4 +54,26 @@ public class GroupService {
         }
         return false;
     }
+
+    public boolean addGroupPermission(Long id, Long permission){
+        Optional<GroupEntity> groupOpt = groupRepository.findById(id);
+        if(groupOpt.isPresent()){
+            GroupEntity group = groupOpt.get();
+            group.addRoleOrPermission(permission);
+            groupRepository.save(group);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeGroupPermission(Long id, Long permission){
+        Optional<GroupEntity> groupOpt = groupRepository.findById(id);
+        if(groupOpt.isPresent()){
+            GroupEntity group = groupOpt.get();
+            group.removeRoleOrPermission(permission);
+            groupRepository.save(group);
+            return true;
+        }
+        return false;
+    }
 }

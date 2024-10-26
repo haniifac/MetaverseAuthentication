@@ -47,6 +47,13 @@ public class GroupEntity implements Serializable {
     }
 
     /**
+     * <p>Remove roles/permissions using the bitwise AND of the permission's negation  </p>
+     * @param permission bitmask representation of role / permission
+     */
+    // Add roles/permissions using bitwise OR
+    public void removeRoleOrPermission(long permission) { this.permission &= ~permission; }
+
+    /**
      * <p>Check if a specific permission is present using bitwise AND </p>
      * @param permission bitmask representation of role / permission
      */

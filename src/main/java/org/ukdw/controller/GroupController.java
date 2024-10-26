@@ -1,11 +1,14 @@
 package org.ukdw.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ukdw.dto.group.GroupDTO;
+import org.ukdw.dto.request.auth.GroupPermissionRequest;
+import org.ukdw.dto.response.AppsCheckPermissionResponse;
 import org.ukdw.dto.response.ResponseWrapper;
 import org.ukdw.entity.GroupEntity;
 import org.ukdw.services.GroupService;
@@ -79,5 +82,19 @@ public class GroupController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id: %s not found", id), null));
         }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addGroupPermission(@Valid @RequestBody GroupPermissionRequest request){
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), groupService.addGroupPermission(request.getGroupId(), request.getFeatureCode()));
+        return ResponseEntity.ok(response);
+    }
+
+    @ResponseBody
+    @DeleteMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removeGroupPermission(@Valid @RequestBody GroupPermissionRequest request){
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), groupService.removeGroupPermission(request.getGroupId(), request.getFeatureCode()));
+        return ResponseEntity.ok(response);
     }
 }
