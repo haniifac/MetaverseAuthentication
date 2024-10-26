@@ -1,10 +1,8 @@
 package org.ukdw.dto.request.auth;
 
-
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
 
 /**
 
@@ -12,14 +10,15 @@ import lombok.Setter;
  * Date: 10/26/2024
  * Time: 8:05 PM
  *
- * Description : Add / remove permission from group
+ * Description : Add / remove permission from user
  */
-@Setter
+
 @Getter
-public class GroupPermissionRequest {
+@Setter
+public class UserPermissionRequest {
+    @NotNull(message = "user id is required")
+    private long userId;
+
     @NotNull(message = "group id is required")
     private long groupId;
-
-    @NotNull(message = "feature code is required")
-    private long featureCode;
 }

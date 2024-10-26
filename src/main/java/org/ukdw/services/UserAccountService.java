@@ -7,16 +7,20 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukdw.dto.request.auth.SignUpRequest;
 import org.ukdw.dto.user.UserRoleDTO;
+import org.ukdw.entity.GroupEntity;
 import org.ukdw.entity.StudentEntity;
 import org.ukdw.entity.TeacherEntity;
 import org.ukdw.entity.UserAccountEntity;
+import org.ukdw.repository.GroupRepository;
 import org.ukdw.repository.StudentRepository;
 import org.ukdw.repository.TeacherRepository;
 import org.ukdw.repository.UserAccountRepository;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 //https://www.baeldung.com/spring-transactional-propagation-isolation
@@ -25,13 +29,10 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
-    private final TeacherRepository teacherRepository;
-    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
 
     @Transactional
     public List<UserAccountEntity> listUserAccount() {
-//        List<TeacherEntity> teacherEntityList = teacherRepository.findAll();
-//        List<StudentEntity> studentEntityList = studentRepository.findAll();
         return userAccountRepository.findAll();
     }
 
@@ -128,5 +129,33 @@ public class UserAccountService {
         return true;
     }
 
+    public boolean addUserGroup(long userId, long groupId){
+        Optional<UserAccountEntity> userOpt = userAccountRepository.findById(userId);
+        Optional<GroupEntity> groupOpt = groupRepository.findById(groupId);
+        if(userOpt.isPresent() && groupOpt.isPresent()){
+            UserAccountEntity user = userOpt.get();
+            GroupEntity group = groupOpt.get();
+            Set<GroupEntity> existingGroups = user.getGroups();
+            existingGroups.add(group);
 
+            userAccountRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeUserGroup(long userId, long groupId){
+        Optional<UserAccountEntity> userOpt = userAccountRepository.findById(userId);
+        Optional<GroupEntity> groupOpt = groupRepository.findById(groupId);
+        if(userOpt.isPresent() && groupOpt.isPresent()){
+            UserAccountEntity user = userOpt.get();
+            GroupEntity group = groupOpt.get();
+            Set<GroupEntity> existingGroups = user.getGroups();
+            existingGroups.remove(group);
+
+            userAccountRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 }
