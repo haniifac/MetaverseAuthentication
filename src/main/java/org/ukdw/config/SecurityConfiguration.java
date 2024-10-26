@@ -47,6 +47,14 @@ public class SecurityConfiguration {
     @Qualifier("delegateAuthenticationEntryPoint")
     private final AuthenticationEntryPoint authEntryPoint;
 
+    private static final String[] ENDPOINT_WHITELIST = {
+        "/auth/signin",
+        "auth/signup/student",
+        "auth/signup/teacher",
+        "/refreshaccesstoken",
+        "/h2-console/**"
+    };
+
     //https://medium.com/@truongbui95/jwt-authentication-and-authorization-with-spring-boot-3-and-spring-security-6-2f90f9337421
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -56,11 +64,7 @@ public class SecurityConfiguration {
                 // it reaches Spring MVC.
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(
-                                "/auth/**",
-                                "/hello",
-                                "/h2-console/**"
-                                )
+                        .requestMatchers(ENDPOINT_WHITELIST)
                         .permitAll()
                         .anyRequest().authenticated()
                 )
