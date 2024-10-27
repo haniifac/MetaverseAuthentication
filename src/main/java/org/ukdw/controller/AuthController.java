@@ -7,7 +7,6 @@ import org.ukdw.dto.request.auth.*;
 import org.ukdw.dto.response.AppsCheckPermissionResponse;
 import org.ukdw.dto.response.RefreshAccessTokenResponse;
 import org.ukdw.dto.response.ResponseWrapper;
-import org.ukdw.entity.RolePermissionConstants;
 import org.ukdw.entity.StudentEntity;
 import org.ukdw.entity.TeacherEntity;
 import org.ukdw.entity.UserAccountEntity;

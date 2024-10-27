@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Setter
@@ -36,6 +37,14 @@ public class GroupEntity implements Serializable {
     // store roles and permission as a bitmask type
     @Column(name = "permission", columnDefinition = "BIGINT DEFAULT 0")
     private long permission;
+
+    /**
+     * Get resources based on permissions.
+     * @return Map of permission bit values to names.
+     */
+    public Map<Long, String> getResources() {
+        return ResourceConstants.loadResourceNames(this.permission);
+    }
 
     /**
      * <p>Add roles/permissions using bitwise OR </p>
