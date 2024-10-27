@@ -1,6 +1,8 @@
 package org.ukdw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,6 +30,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserAccountService {
 
+    private static final Logger log = LogManager.getLogger(UserAccountService.class);
     private final UserAccountRepository userAccountRepository;
     private final GroupRepository groupRepository;
 
@@ -43,8 +46,18 @@ public class UserAccountService {
 
     @Transactional
     public boolean deleteUserAccount(Long id){
-        if (userAccountRepository.existsById(id)) {
-            userAccountRepository.deleteById(id);
+        // Find the user
+        Optional<UserAccountEntity> userOpt = userAccountRepository.findById(id);
+
+        if(userOpt.isPresent()){
+            UserAccountEntity user = userOpt.get();
+//            // Remove the user from its groups
+//            for (GroupEntity group : user.getGroups()) {
+//                group.getUsers().remove(user);
+//            }
+
+            // Now delete the user
+            userAccountRepository.delete(user);
             return true;
         }
         return false;

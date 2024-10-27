@@ -59,7 +59,7 @@ public class UserAccountEntity {
 
 //    private String role;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),

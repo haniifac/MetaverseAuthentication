@@ -38,7 +38,7 @@ public class GroupController {
         if (group.isPresent()){
             return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), group.get()));
         }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id:%s not found", id), null));
         }
     }
 
@@ -47,7 +47,7 @@ public class GroupController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createGroup(@RequestBody GroupDTO request) {
         if(request.getGroupname().isEmpty() || request.getPermission().isEmpty()) {
-            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.BAD_REQUEST.value(), "Request Parameter Error"));
+            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.BAD_REQUEST.value(), null));
         }
 
         GroupEntity newGroup = new GroupEntity();
@@ -66,7 +66,7 @@ public class GroupController {
         if (updatedGroup.isPresent()){
             return ResponseEntity.ok(updatedGroup);
         }else{
-            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id: %s not found", id), null));
+            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id:%s not found", id), null));
         }
 
     }
@@ -77,10 +77,10 @@ public class GroupController {
     public ResponseEntity<?> deleteGroup(@PathVariable(value = "id") Long id) {
         boolean deleted = groupService.deleteGroup(id);
         if (deleted) {
-            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), String.format("Success delete id: %s", id), "");
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), String.format("id:%s delete success", id), "");
             return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id: %s not found", id), null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id:%s not found", id), null));
         }
     }
 

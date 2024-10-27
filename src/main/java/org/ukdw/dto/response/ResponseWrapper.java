@@ -55,8 +55,10 @@ public class ResponseWrapper<T> {
 		this.data = data;
 		if(status == HttpStatus.OK.value()) {
 			this.message = "Data fetched successfully";
+		} else if (status == HttpStatus.BAD_REQUEST.value()) {
+			this.message = "Request parameter error";
 		} else {
-			this.message = "";
-		}
+				this.message = "";
+			}
 	}
 }
