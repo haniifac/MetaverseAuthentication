@@ -265,7 +265,7 @@ public class AuthService {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public boolean canAccessFeature(int requiredPermission) {
+    public boolean canAccessFeature(long requiredPermission) {
         Authentication authentication = getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

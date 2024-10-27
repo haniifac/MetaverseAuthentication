@@ -18,5 +18,5 @@ import lombok.Setter;
 @Getter
 public class AppsCheckPermissionRequest {
     @NotNull(message = "feature code is required")
-    private int featureCode;
+    private long featureCode;
 }
