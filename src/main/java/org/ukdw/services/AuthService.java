@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ukdw.dto.request.auth.SignUpRequest;
+import org.ukdw.dto.response.RefreshAccessTokenResponse;
 import org.ukdw.dto.user.UserRoleDTO;
 import org.ukdw.entity.*;
 import org.ukdw.exception.AuthenticationExceptionImpl;
@@ -151,8 +152,10 @@ public class AuthService {
             }
             CustomUserDetails userDetails = new CustomUserDetails(accountEntity);
             String token = jwtService.generateToken(userDetails);
+            String refreshToken = jwtService.generateRefreshToken(userDetails);
             accountEntity.setAccessToken(token);
-//            accountEntity.setRole("ADMIN");
+            accountEntity.setRefreshToken(refreshToken);
+            userAccountRepository.save(accountEntity);
             return accountEntity;
            /* UserAccountDTO userAccount = userAccountService.getDetailData(payload.getEmail());
             UserRoleDTO userRoleDTO = roleService.getRoleByEmail(payload.getEmail());

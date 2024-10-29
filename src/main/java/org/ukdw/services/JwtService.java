@@ -43,6 +43,10 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    public String generateRefreshToken (UserDetails userDetails) throws ParseException {
+        return generateRefreshToken(new HashMap<>(), userDetails);
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -61,6 +65,16 @@ public class JwtService {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(expirationDate)
                 .signWith(getSigningKey()).compact();
+    }
+
+    private String generateRefreshToken(HashMap<String, Object> extraClaims, UserDetails userDetails) {
+        LocalDateTime localDateTime =  LocalDateTime.now().plusDays(appProperties.getAuth().getTokenExpirationDay() + 6);
+        Date expirationDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(expirationDate)
+                .signWith(getSigningKey())
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {
