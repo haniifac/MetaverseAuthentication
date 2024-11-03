@@ -41,7 +41,7 @@ public class UserAccountEntity {
 
     private String accessToken;
 
-    private String idToken;
+//    private String idToken;
 
     /*The refresh_token is only returned on the first request.
      When you refresh the access token a second time it returns everything except the refresh_token and the file_put_contents
@@ -49,7 +49,7 @@ public class UserAccountEntity {
       You will get refreshToken if user access to google API already revoked. */
     private String refreshToken;
 
-    private String fcmToken;
+//    private String fcmToken;
 
     private String regNumber;
 
@@ -86,9 +86,9 @@ public class UserAccountEntity {
         this.username = username;
         this.password = password;
         this.accessToken = accessToken;
-        this.idToken = idToken;
+//        this.idToken = idToken;
         this.refreshToken = refreshToken;
-        this.fcmToken = fcmToken;
+//        this.fcmToken = fcmToken;
         this.regNumber = regNumber;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -98,7 +98,7 @@ public class UserAccountEntity {
                              String nomorInduk,
                              String email, String imageUrl) {
         this.accessToken = accessToken;
-        this.idToken = idToken;
+//        this.idToken = idToken;
         this.refreshToken = refreshToken;
         this.regNumber = nomorInduk;
         this.email = email;
