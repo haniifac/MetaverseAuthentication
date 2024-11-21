@@ -12,7 +12,6 @@
         <module>functional</module>
         <module>functional/classroom-service</module>
         <module>functional/auth-service</module>
-        <module>functional/group-service</module>
         <module>functional/profile-service</module>
         <module>nonfunctional/discovery-service</module>
         <module>nonfunctional</module>
