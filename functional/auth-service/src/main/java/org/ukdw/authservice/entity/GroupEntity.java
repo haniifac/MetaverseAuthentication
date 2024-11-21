@@ -29,7 +29,7 @@ public class GroupEntity implements Serializable {
     @Column(name = "groupname", nullable = false)
     private String groupname;
 
-    @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "groups")
     @JsonBackReference // Prevent recursion by indicating this is the "back" side of the relationship
     private Set<UserAccountEntity> users = new HashSet<>();
 

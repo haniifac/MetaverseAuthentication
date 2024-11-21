@@ -63,9 +63,16 @@ public class JwtService {
         Date expirationDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         var customUserDetails = (CustomUserDetails) userDetails;
 
-        var role = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst().get().getGroupname();
-        var permission = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst().get().getPermission();
+        var groupOpt = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst();
         var id = customUserDetails.getUserAccountEntity().getId();
+
+        var role = "";
+        var permission = 0L;
+
+        if (groupOpt.isPresent()){
+            role = groupOpt.get().getGroupname();
+            permission = groupOpt.get().getPermission();
+        }
 
         extraClaims.put("role", role);
         extraClaims.put("permission", permission);
@@ -82,9 +89,17 @@ public class JwtService {
         LocalDateTime localDateTime =  LocalDateTime.now().plusDays(appProperties.getAuth().getTokenExpirationDay() + 6);
         Date expirationDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         var customUserDetails = (CustomUserDetails) userDetails;
-        var role = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst().get().getGroupname();
-        var permission = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst().get().getPermission();
+
+        var groupOpt = customUserDetails.getUserAccountEntity().getGroups().stream().findFirst();
         var id = customUserDetails.getUserAccountEntity().getId();
+
+        var role = "";
+        var permission = 0L;
+
+        if (groupOpt.isPresent()){
+            role = groupOpt.get().getGroupname();
+            permission = groupOpt.get().getPermission();
+        }
 
         extraClaims.put("role", role);
         extraClaims.put("permission", permission);

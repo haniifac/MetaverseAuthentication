@@ -67,7 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // Optionally handle other exceptions
+    // Optionally handle other exceptions (REMOVE IF YOU WANT TO DEBUG PROBLEM, THIS HANDLER WILL HIDE ERRORS)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(

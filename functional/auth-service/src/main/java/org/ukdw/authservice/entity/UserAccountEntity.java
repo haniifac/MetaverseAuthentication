@@ -46,7 +46,7 @@ public class UserAccountEntity {
 
 //    private String imageUrl;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
