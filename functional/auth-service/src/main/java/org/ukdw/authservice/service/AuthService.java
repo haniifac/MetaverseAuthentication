@@ -164,16 +164,21 @@ public class AuthService {
     }
 
     public boolean canAccessFeature(String[] roles, Long[] permissions, HttpServletRequest httpServletRequest) {
-        long id = Long.parseLong(httpServletRequest.getHeader("X-id"));
+//        long id = Long.parseLong(httpServletRequest.getHeader("X-id"));
+//        UserAccountEntity userAccountEntity = userAccountRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        UserAccountEntity userAccountEntity = userAccountRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Authentication authentication = getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserAccountEntity userAccountEntity = userDetails.getUserAccountEntity();
 
-        // match role from parameter and db, if match check permission
-        for (String role : roles) {
-            if (userAccountEntity.getGroups().stream().anyMatch(group -> group.getGroupname().equals(role))) {
-                for (Long permission : permissions) {
-                    if (userAccountEntity.getGroups().stream().anyMatch(group -> group.hasPermission(permission))) {
-                        return true;
+            // match role from parameter and db, if match check permission
+            for (String role : roles) {
+                if (userAccountEntity.getGroups().stream().anyMatch(group -> group.getGroupname().equals(role))) {
+                    for (Long permission : permissions) {
+                        if (userAccountEntity.getGroups().stream().anyMatch(group -> group.hasPermission(permission))) {
+                            return true;
+                        }
                     }
                 }
             }
