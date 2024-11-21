@@ -12,6 +12,12 @@ spring:
               - Path=/groups/**
           filters:
             - name: AuthorizationHeaderFilter
+        - id: auth-service-user
+          uri: lb://auth-service
+          predicates:
+            - Path=/users/**
+          filters:
+            - name: AuthorizationHeaderFilter
         - id: classroom-service
           uri: lb://classroom-service
           predicates:
