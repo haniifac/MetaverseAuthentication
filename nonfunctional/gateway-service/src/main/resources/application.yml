@@ -1,0 +1,45 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        - id: auth-service-group
+          uri: lb://auth-service
+          predicates:
+              - Path=/groups/**
+          filters:
+            - name: AuthorizationHeaderFilter
+        - id: classroom-service
+          uri: lb://classroom-service
+          predicates:
+            - Path=/classroom-service/**
+          filters:
+            - name: AuthorizationHeaderFilter
+        - id: profile-service
+          uri: lb://profile-service
+          predicates:
+            - Path=/profile-service/**
+          filters:
+            - name: AuthorizationHeaderFilter
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8010/eureka
+  instance:
+    prefer-ip-address: true
+
+server:
+  port: 8081
+
+service:
+  user:
+    url:
+      base: http://localhost:8082/auth

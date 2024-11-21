@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: profile-service
+  datasource:
+    url: jdbc:h2:mem:profiledb;MODE=LEGACY;DATABASE_TO_LOWER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS profile;
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+
+server:
+  port: 8084
+  servlet:
+    context-path: /profile-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8010/eureka
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG

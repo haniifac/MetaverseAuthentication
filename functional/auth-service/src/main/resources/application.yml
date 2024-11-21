@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:authdb;MODE=LEGACY;DATABASE_TO_LOWER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS authentication;
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  application:
+    name: auth-service
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+
+  h2:
+    console.enabled: true
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC0CszIYI8wlobG4pPOwb5TGYpJBRwsZH9
+    tokenExpirationDay: 1
+
+token:
+  signing:
+    key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
+
+server:
+  port: 8082
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8010/eureka
+
+
+# config rest template
+http:
+  outgoing:
+    read-timeout: 120000
+    connection-timeout: 30000
+
+# profile service
+profile:
+  service:
+    url: http://PROFILE-SERVICE/profile-service
+    student-path: ${profile.service.url}/students
+    teacher-path: ${profile.service.url}/teachers
+
