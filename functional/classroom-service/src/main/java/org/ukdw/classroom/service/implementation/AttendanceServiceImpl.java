@@ -136,7 +136,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         // Before set attendance, check if the student is enrolled to this classroom
         boolean isStudentEnrolled = classroomService.isStudentEnrolled(attendance.getClassroom().getId(), studentId);
         if(!isStudentEnrolled){
-            throw new AccessDeniedException("studentId: " + studentId + "is not enrolled in this class");
+            throw new AccessDeniedException("studentId: " + studentId + " is not enrolled in this class");
         }
 
         // Check if the student has already marked attendance

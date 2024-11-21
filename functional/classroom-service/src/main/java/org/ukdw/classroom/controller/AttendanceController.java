@@ -22,7 +22,7 @@ public class AttendanceController {
     private AttendanceServiceImpl attendanceServiceImpl;
 
     // Create attendance
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER,STUDENT', 511L, 3L, 1L)")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
     @PostMapping()
     public ResponseEntity<AttendanceEntity> createAttendance(
             @RequestBody CreateAttendanceRequest request) {
@@ -65,7 +65,7 @@ public class AttendanceController {
     }
 
     // Get attendance by classroom ID
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER,STUDENT', 511L, 3L, 1L)")
     @GetMapping("/classroom/{classroomId}")
     public ResponseEntity<?> getAttendanceByClassroomId(@PathVariable Long classroomId) {
         Optional<List<AttendanceEntity>> attendances = attendanceServiceImpl.getAttendanceByClassroomId(classroomId);
@@ -73,9 +73,8 @@ public class AttendanceController {
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found with id " + classroomId));
     }
 
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
     @PostMapping("/student/{attendanceId}")
-    public ResponseEntity<?> setStudentAttendance(
+    public ResponseEntity<?> setStudentAttendanceRecord(
             @PathVariable Long attendanceId,
             @RequestBody StudentAttendanceRequest request
     ){
@@ -85,18 +84,11 @@ public class AttendanceController {
 
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
     @DeleteMapping("/student/{attendanceId}")
-    public ResponseEntity<?> deleteStudentAttendanceByAttendanceIdAndStudentId(
+    public ResponseEntity<?> deleteStudentAttendanceRecord(
             @PathVariable Long attendanceId,
             @RequestBody StudentAttendanceRequest request
     ){
         attendanceServiceImpl.deleteStudentAttendance(attendanceId, request.getStudentId());
         return ResponseEntity.ok("Success");
     }
-
-    // Delete all attendances by classroom ID
-    /*@DeleteMapping("/classroom/{classroomId}")
-    public ResponseEntity<Void> deleteAttendancesByClassroomId(@PathVariable Long classroomId) {
-        attendanceService.deleteAttendancesByClassroomId(classroomId);
-        return ResponseEntity.noContent().build();
-    }*/
 }

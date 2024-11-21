@@ -1,10 +1,13 @@
 package org.ukdw.classroom.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.ukdw.classroom.dto.request.AddRemoveClassroomStudentRequest;
+import org.ukdw.classroom.dto.request.AddRemoveClassroomTeacherRequest;
 import org.ukdw.common.ResponseWrapper;
 import org.ukdw.common.exception.ResourceNotFoundException;
 import org.ukdw.classroom.dto.classroom.ClassroomPublicDTO;
@@ -66,17 +69,35 @@ public class ClassroomController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // Attendance system
-//    @PostMapping("/{classroomId}/attendance")
-//    public ResponseEntity<String> recordAttendance(
-//            @PathVariable Long classroomId,
-//            @RequestParam Long studentId,
-//            @RequestHeader("Authorization") String jwtToken) {
-//        String result = classroomService.recordAttendance(classroomId, studentId, jwtToken);
-//        if ("Attendance recorded successfully".equals(result)) {
-//            return ResponseEntity.ok(result);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
-//        }
-//    }
+    @PostMapping("/teacher/{classroomId}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
+    public ResponseEntity<?> addTeacherToClassroom(@PathVariable Long classroomId, @Valid @RequestBody AddRemoveClassroomTeacherRequest request) {
+        Boolean isAddTeacher = classroomServiceImpl.addTeacherToClassroom(classroomId, request.getTeacherId());
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),isAddTeacher);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/teacher/{classroomId}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
+    public ResponseEntity<?> removeTeacherFromClassroom(@PathVariable Long classroomId, @Valid @RequestBody AddRemoveClassroomTeacherRequest request) {
+        Boolean isAddTeacher = classroomServiceImpl.removeTeacherFromClassroom(classroomId, request.getTeacherId());
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), isAddTeacher);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/student/{classroomId}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
+    public ResponseEntity<?> addStudentToClassroom(@PathVariable Long classroomId, @Valid @RequestBody AddRemoveClassroomStudentRequest request) {
+        Boolean isAddStudent = classroomServiceImpl.addStudentToClassroom(classroomId, request.getStudentId());
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),isAddStudent);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/student/{classroomId}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
+    public ResponseEntity<?> removeStudentFromClassroom(@PathVariable Long classroomId, @Valid @RequestBody AddRemoveClassroomStudentRequest request) {
+        Boolean isAddStudent = classroomServiceImpl.removeStudentFromClassroom(classroomId, request.getStudentId());
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),isAddStudent);
+        return ResponseEntity.ok(response);
+    }
 }

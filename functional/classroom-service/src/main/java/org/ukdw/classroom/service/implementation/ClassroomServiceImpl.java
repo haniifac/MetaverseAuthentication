@@ -3,6 +3,7 @@ package org.ukdw.classroom.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.ukdw.common.exception.RequestParameterErrorException;
 import org.ukdw.common.exception.ResourceNotFoundException;
 import org.ukdw.classroom.dto.request.UpdateClassroomRequest;
 import org.ukdw.classroom.entity.AttendanceEntity;
@@ -12,8 +13,10 @@ import org.ukdw.classroom.repository.ClassroomRepository;
 import org.ukdw.classroom.service.AttendanceService;
 import org.ukdw.classroom.service.ClassroomService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
@@ -103,88 +106,63 @@ public class ClassroomServiceImpl implements ClassroomService {
                 .anyMatch(id -> id.equals(studentId));
     }
 
-    /*public void addTeacherToClassroom(Long classroomId, Long teacherId) {
+    public boolean addTeacherToClassroom(Long classroomId, Long teacherId) {
         ClassroomEntity classroom = classroomRepository.findById(classroomId)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Classroom not found"));
 
         if (classroom.getTeacherIds() == null) {
             classroom.setTeacherIds(new HashSet<>());
         }
 
         if (!classroom.getTeacherIds().add(teacherId)) {
-            throw new IllegalStateException("Teacher already exists in the classroom");
+            throw new RequestParameterErrorException("Teacher already exists in the classroom");
         }
 
+        classroom.getTeacherIds().add(teacherId);
         classroomRepository.save(classroom);
-    }*/
+        return true;
+    }
 
-    /*public void removeTeacherFromClassroom(Long classroomId, Long teacherId) {
+    public boolean removeTeacherFromClassroom(Long classroomId, Long teacherId) {
         ClassroomEntity classroom = classroomRepository.findById(classroomId)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Classroom not found"));
 
         if (classroom.getTeacherIds() == null || !classroom.getTeacherIds().remove(teacherId)) {
-            throw new IllegalStateException("Teacher does not exist in the classroom");
+            throw new RequestParameterErrorException("Teacher does not exist in the classroom");
         }
 
+        classroom.getTeacherIds().remove(teacherId);
         classroomRepository.save(classroom);
-    }*/
+        return true;
+    }
 
-    /*public void addStudentToClassroom(Long classroomId, Long studentId) {
+    public boolean addStudentToClassroom(Long classroomId, Long studentId) {
         ClassroomEntity classroom = classroomRepository.findById(classroomId)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Classroom not found"));
 
         if (classroom.getStudentIds() == null) {
             classroom.setStudentIds(new HashSet<>());
         }
 
         if (!classroom.getStudentIds().add(studentId)) {
-            throw new IllegalStateException("Student already exists in the classroom");
+            throw new RequestParameterErrorException("Student already exists in the classroom");
         }
 
+        classroom.getStudentIds().add(studentId);
         classroomRepository.save(classroom);
-    }*/
+        return true;
+    }
 
-    /*public void removeStudentFromClassroom(Long classroomId, Long studentId) {
+    public boolean removeStudentFromClassroom(Long classroomId, Long studentId) {
         ClassroomEntity classroom = classroomRepository.findById(classroomId)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Classroom not found"));
 
         if (classroom.getStudentIds() == null || !classroom.getStudentIds().remove(studentId)) {
-            throw new IllegalStateException("Student does not exist in the classroom");
+            throw new RequestParameterErrorException("Student does not exist in the classroom");
         }
 
+        classroom.getStudentIds().remove(studentId);
         classroomRepository.save(classroom);
-    }*/
-
-    // TODO: implement this when auth-service is working
-    // Attendance system
-     /*public String recordAttendance(Long classroomId, Long studentId, String jwtToken) {
-        // Check JWT validity and permissions
-        if (!authServiceClient.isJwtValid(jwtToken)) {
-            return "Invalid JWT token";
-        }
-
-        // Check student permission to enter the classroom
-        if (!authServiceClient.hasPermission(studentId, classroomId, Permissions.ENTER_CLASSROOM)) {
-            return "Permission denied for classroom entry";
-        }
-
-        // Find active attendance session for classroom
-        Optional<AttendanceEntity> activeAttendance = attendanceRepository.findActiveAttendance(classroomId, LocalDateTime.now());
-        if (activeAttendance.isEmpty()) {
-            return "Attendance session not open";
-        }
-
-        AttendanceEntity attendanceEntity = activeAttendance.get();
-
-        // Check attendance time window
-        LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(attendanceEntity.getOpenTime()) || now.isAfter(attendanceEntity.getCloseTime())) {
-            return "Attendance time outside allowed window";
-        }
-
-        // Record attendance
-        attendanceEntity.getStudentAttendanceTimes().put(studentId, now);
-        attendanceRepository.save(attendanceEntity);
-        return "Attendance recorded successfully";
-    }*/
+        return true;
+    }
 }
