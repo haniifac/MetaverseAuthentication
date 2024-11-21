@@ -37,13 +37,13 @@ public class GroupEntity implements Serializable {
     @Column(name = "permission", columnDefinition = "BIGINT DEFAULT 0")
     private long permission;
 
-    /**
-     * Get resources based on permissions.
-     * @return Map of permission bit values to names.
-     */
-    public Map<Long, String> getResources() {
-        return ResourceConstants.loadResourceNames(this.permission);
-    }
+//    /**
+//     * Get resources based on permissions.
+//     * @return Map of permission bit values to names.
+//     */
+//    public Map<Long, String> getResources() {
+//        return ResourceConstants.loadResourceNames(this.permission);
+//    }
 
     /**
      * <p>Add roles/permissions using bitwise OR </p>

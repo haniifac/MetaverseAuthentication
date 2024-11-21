@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukdw.authservice.dto.GroupDTO;
 import org.ukdw.authservice.dto.GroupPermissionRequest;
+import org.ukdw.authservice.dto.GroupWithResourcesDTO;
 import org.ukdw.authservice.entity.GroupEntity;
 import org.ukdw.authservice.service.GroupService;
 import org.ukdw.common.ResponseWrapper;
@@ -30,18 +31,21 @@ public class GroupController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
+    @GetMapping("/details")
+    public ResponseEntity<?> getAllGroupsWithResources(){
+        ResponseWrapper<List<GroupWithResourcesDTO>> response = new ResponseWrapper<>(HttpStatus.OK.value(), groupService.getAllGroupsWithResources());
+        return ResponseEntity.ok(response);
+    }
+
     // GET a group by ID
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<?> getGroupById(@PathVariable(value = "id") long id) {
-        Optional<GroupEntity> group = groupService.getGroupById(id);
-
-        if (group.isPresent()){
-            return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), group.get()));
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id:%s not found", id), null));
-        }
+        GroupWithResourcesDTO group = groupService.getGroupById(id);
+        ResponseWrapper<GroupWithResourcesDTO> response = new ResponseWrapper<>(HttpStatus.OK.value(), group);
+        return ResponseEntity.ok(response);
     }
 
     // POST - Create a new group

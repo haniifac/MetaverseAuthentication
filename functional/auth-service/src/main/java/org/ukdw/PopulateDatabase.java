@@ -98,6 +98,15 @@ public class PopulateDatabase implements CommandLineRunner {
         );
         newUser3.setGroups(Set.of(teacherGroup));
 
+        UserAccountEntity newUser4 = new UserAccountEntity(
+          "admin2@example.com",
+          "admin2",
+          "password",
+          "REG125",
+          "admin"
+        );
+        newUser4.setGroups(Set.of(adminGroup));
+
         UserAccountEntity teacher = new UserAccountEntity(
                 "dendy.prtha@staff.ukdw.ac.id",
                 "dendy",
@@ -117,38 +126,38 @@ public class PopulateDatabase implements CommandLineRunner {
         student.setGroups(Set.of(studentGroup));
 
         // Save all users to the database in one save
-        userAccountRepository.saveAll(List.of(newUser2, newUser3, teacher, student));
+        userAccountRepository.saveAll(List.of(newUser2, newUser3, newUser4, teacher, student));
     }
 
     private void createInitialResources(){
         ResourceEntity enterMathClass = new ResourceEntity();
         enterMathClass.setResourceName("ENTER_MATH_CLASSROOM");
-        enterMathClass.setResourceBitmask(ResourceConstants.ENTER_MATH_CLASSROOM);
+        enterMathClass.setResourceBitmask(1L);
         resourceRepository.save(enterMathClass);
 
         ResourceEntity teachMathClass = new ResourceEntity();
         teachMathClass.setResourceName("TEACHING_MATH_CLASSROOM");
-        teachMathClass.setResourceBitmask(ResourceConstants.TEACHING_MATH_CLASSROOM);
+        teachMathClass.setResourceBitmask(2L);
         resourceRepository.save(teachMathClass);
 
         ResourceEntity administerMathClass = new ResourceEntity();
         administerMathClass.setResourceName("ADMINISTER_MATH_CLASSROOM");
-        administerMathClass.setResourceBitmask(ResourceConstants.ADMINISTER_MATH_CLASSROOM);
+        administerMathClass.setResourceBitmask(4L);
         resourceRepository.save(administerMathClass);
 
         ResourceEntity enterBioClass = new ResourceEntity();
         enterBioClass.setResourceName("ENTER_BIOLOGY_CLASSROOM");
-        enterBioClass.setResourceBitmask(ResourceConstants.ENTER_BIOLOGY_CLASSROOM);
+        enterBioClass.setResourceBitmask(8L);
         resourceRepository.save(enterBioClass);
 
         ResourceEntity teachBioClass = new ResourceEntity();
         teachBioClass.setResourceName("TEACHING_BIOLOGY_CLASSROOM");
-        teachBioClass.setResourceBitmask(ResourceConstants.TEACHING_BIOLOGY_CLASSROOM);
+        teachBioClass.setResourceBitmask(16L);
         resourceRepository.save(teachBioClass);
 
         ResourceEntity administerBioClass = new ResourceEntity();
         administerBioClass.setResourceName("ADMINISTER_BIOLOGY_CLASSROOM");
-        administerBioClass.setResourceBitmask(ResourceConstants.ADMINISTER_BIOLOGY_CLASSROOM);
+        administerBioClass.setResourceBitmask(32L);
         resourceRepository.save(administerBioClass);
     }
 }

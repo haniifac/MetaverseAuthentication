@@ -4,28 +4,51 @@ package org.ukdw.authservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ukdw.authservice.dto.GroupDTO;
+import org.ukdw.authservice.dto.GroupWithResourcesDTO;
 import org.ukdw.authservice.entity.GroupEntity;
 import org.ukdw.authservice.repository.GroupRepository;
+import org.ukdw.common.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GroupService {
 
     private final GroupRepository groupRepository;
+    private final ResourceService resourceService;
 
     public List<GroupEntity> getAllGroups() {
         return groupRepository.findAll();
+    }
+
+    public List<GroupWithResourcesDTO> getAllGroupsWithResources(){
+        List<GroupEntity> groups = groupRepository.findAll();
+        return groups.stream()
+                .map(group -> {
+                    Map<Long, String> resources = resourceService.loadResourceNames(group.getPermission());
+                    return new GroupWithResourcesDTO(group, resources);
+                })
+                .collect(Collectors.toList());
     }
 
     public GroupEntity findByGroupname(String groupname) {
         return groupRepository.findByGroupname(groupname);
     }
 
-    public Optional<GroupEntity> getGroupById(Long id) {
-        return groupRepository.findById(id);
+    public GroupWithResourcesDTO getGroupById(Long id) {
+//        return groupRepository.findById(id);
+        Optional<GroupEntity> groupOpt = groupRepository.findById(id);
+        if(groupOpt.isEmpty()){
+            throw new ResourceNotFoundException("Group id: "+ id + " not found");
+        }
+
+        GroupEntity group = groupOpt.get();
+        Map<Long, String> resources = resourceService.loadResourceNames(group.getPermission());
+        return new GroupWithResourcesDTO(group, resources);
     }
 
     public GroupEntity createGroup(GroupEntity groupEntity) {

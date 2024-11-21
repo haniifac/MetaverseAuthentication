@@ -68,17 +68,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // Optionally handle other exceptions (REMOVE IF YOU WANT TO DEBUG PROBLEM, THIS HANDLER WILL HIDE ERRORS)
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                ex.getMessage(),
-                Instant.now().toString()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "An unexpected error occurred",
+//                ex.getMessage(),
+//                Instant.now().toString()
+//        );
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
