@@ -3,6 +3,7 @@ package org.ukdw.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukdw.authservice.entity.ResourceEntity;
 import org.ukdw.authservice.service.ResourceService;
@@ -17,6 +18,7 @@ public class ResourceController {
 
     // Create a new resource
     @PostMapping
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     public ResponseEntity<ResourceEntity> createResource(@RequestBody ResourceEntity resourceEntity) {
         ResourceEntity createdResource = resourceService.createResource(resourceEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdResource);
@@ -24,6 +26,7 @@ public class ResourceController {
 
     // Get all resources
     @GetMapping
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     public ResponseEntity<List<ResourceEntity>> getAllResources() {
         List<ResourceEntity> resources = resourceService.getAllResources();
         return ResponseEntity.ok(resources);
@@ -31,6 +34,7 @@ public class ResourceController {
 
     // Get resource by ID
     @GetMapping("/{id}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     public ResponseEntity<ResourceEntity> getResourceById(@PathVariable Long id) {
         ResourceEntity resource = resourceService.getResourceById(id);
         return ResponseEntity.ok(resource);
@@ -47,6 +51,7 @@ public class ResourceController {
 
     // Delete resource by ID
     @DeleteMapping("/{id}")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     public ResponseEntity<Void> deleteResourceById(@PathVariable Long id) {
         resourceService.deleteResourceById(id);
         return ResponseEntity.noContent().build();
