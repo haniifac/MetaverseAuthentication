@@ -67,7 +67,7 @@ public class PopulateDatabase implements CommandLineRunner {
         // Sample user data
         UserAccountEntity newUser2 = new UserAccountEntity(
                 "admin@example.com",
-                "Admin",
+                "admin",
                 "password",
                 "REG124",
                 "admin"
@@ -76,7 +76,7 @@ public class PopulateDatabase implements CommandLineRunner {
 
         UserAccountEntity newUser3 = new UserAccountEntity(
                 "teacher@example.com",
-                "UserTeacher",
+                "teacher",
                 "password",
                 "REG125",
                 "teacher"

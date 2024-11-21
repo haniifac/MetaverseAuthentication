@@ -10,6 +10,6 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupDTO {
-    private Optional<String> groupname = Optional.empty();;
-    private Optional<Long> permission = Optional.empty();;
+    private Optional<String> groupname = Optional.empty();
+    private Optional<Long> permission = Optional.empty();
 }

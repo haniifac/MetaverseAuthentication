@@ -42,33 +42,6 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
-    /*@ResponseBody
-    @PostMapping(value = "/signup/student", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> signupStudent(@Valid @RequestBody SignUpRequest request) {
-        StudentEntity newUser = authService.signupStudent(request);
-        ResponseWrapper<StudentEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), newUser);
-        return ResponseEntity.ok(response);
-    }*/
-
-    // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
-    /*@ResponseBody
-    @PostMapping(value = "/signup/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> signupTeacher(@RequestBody SignUpRequest request) {
-        TeacherEntity newUser = authService.signupTeacher(request);
-        ResponseWrapper<TeacherEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), newUser);
-        return ResponseEntity.ok(response);
-    }*/
-
-    /*@ResponseBody
-    @PostMapping(value = "/refreshaccesstoken", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> refreshAccessToken(@RequestBody RefreshAccessTokenRequest request) throws InvalidTokenException {
-        GoogleTokenResponse googleTokenResponse = authService.refreshAccessToken(request.getRefreshToken());
-        RefreshAccessTokenResponse tokenResponse = new RefreshAccessTokenResponse(googleTokenResponse.getAccessToken(), googleTokenResponse.getIdToken());
-        ResponseWrapper<RefreshAccessTokenResponse> response = new ResponseWrapper<>(HttpStatus.OK.value(), tokenResponse);
-        return ResponseEntity.ok(response);
-    }*/
-
     @ResponseBody
     @PostMapping(value = "/apps-check-permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> appsCheckPermission(@Valid @RequestBody AppsCheckPermissionRequest request) {

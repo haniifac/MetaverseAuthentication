@@ -54,41 +54,6 @@ public class AuthService {
     private final ProfileClient profileClient;
     private final GroupService groupService;
 
-    // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
-//    private final UserRoleService roleService;
-//    private final EmailValidation emailValidation;
-//    private final GroupService groupService;
-
-    // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
-    /*public StudentEntity signupStudent(SignUpRequest request) {
-        StudentEntity newUser = new StudentEntity(
-                request.getUsername(), request.getPassword(), request.getRegNumber(), request.getEmail(),
-                request.getImageUrl(), request.getStudentId(), request.getRegisterYear(), request.getName(), request.getGender(),
-                request.getDayOfBirth(), request.getBirthPlace(), request.getAddress()
-        );
-        newUser.setInputDate(Date.from(Instant.now()));
-        GroupEntity studentGroup = groupService.findByGroupname("STUDENT");
-        newUser.getGroups().add(studentGroup);
-
-        userAccountService.createUserAccount(newUser);
-        return newUser;
-    }*/
-
-    // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
-    /*public TeacherEntity signupTeacher(SignUpRequest request) {
-        TeacherEntity newUser = new TeacherEntity(
-                request.getUsername(), request.getPassword(), request.getRegNumber(), request.getEmail(), request.getImageUrl(),
-                request.getTeacherId(), request.getEmploymentNumber(), request.getName(), request.getGender(), request.getDayOfBirth(),
-                request.getBirthPlace(), request.getAddress(), request.getUrlGoogleScholar()
-        );
-        newUser.setInputDate(Date.from(Instant.now()));
-        GroupEntity teacherGroup = groupService.findByGroupname("TEACHER");
-        newUser.getGroups().add(teacherGroup);
-
-        userAccountService.createUserAccount(newUser);
-        return newUser;
-    }*/
-
     public boolean signOut(String accessToken) {
        /* try {
             //sign out means revoke apps access from user account
@@ -167,10 +132,6 @@ public class AuthService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public boolean validateAccessToken(String accessToken) {
-        return false;
     }
 
     public UserDetailsService userDetailsService() {

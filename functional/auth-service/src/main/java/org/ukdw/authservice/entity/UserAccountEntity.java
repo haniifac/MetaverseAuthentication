@@ -44,8 +44,6 @@ public class UserAccountEntity {
 
     private String scope;
 
-//    private String imageUrl;
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(
             name = "user_group",
