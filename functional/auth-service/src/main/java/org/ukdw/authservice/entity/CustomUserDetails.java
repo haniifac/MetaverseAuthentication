@@ -20,11 +20,9 @@ public class CustomUserDetails implements UserDetails {
         this.userAccountEntity = userAccountEntity;
 
         // Initialize authorities
-        // TODO: THIS ERROR IS DUE TO MIGRATION FROM MONOLITHIC TO MICROSERVICE
         this.authorities = userAccountEntity.getGroups().stream()
-                .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getGroupname().toUpperCase()))
+                .map(group -> new SimpleGrantedAuthority(group.getGroupname().toUpperCase()))
                 .collect(Collectors.toList());
-
     }
 
     @Override
