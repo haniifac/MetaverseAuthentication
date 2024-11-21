@@ -25,6 +25,7 @@ public class ClassroomController {
     private ClassroomServiceImpl classroomServiceImpl;
 
     @PostMapping
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
     public ResponseEntity<ClassroomEntity> createClassroom(@RequestBody ClassroomEntity classroom) {
         ClassroomEntity createdClassroom = classroomServiceImpl.createClassroom(classroom);
         return new ResponseEntity<>(createdClassroom, HttpStatus.CREATED);
@@ -65,7 +66,6 @@ public class ClassroomController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // TODO: implement this when auth-service is working
     // Attendance system
 //    @PostMapping("/{classroomId}/attendance")
 //    public ResponseEntity<String> recordAttendance(
