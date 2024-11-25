@@ -35,7 +35,7 @@ public class ResourceService {
 
     public ResourceEntity createResource(ResourceDTO newResource){
         ResourceEntity resource = new ResourceEntity();
-        resource.setResourceName(newResource.getResourceName());
+        resource.setResourceName(newResource.getResourceName().toUpperCase().trim());
         Long resBitmask = calculateBitmask(newResource.getResourceShift());
         resource.setResourceBitmask(resBitmask);
 

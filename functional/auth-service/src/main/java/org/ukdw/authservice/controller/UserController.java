@@ -22,7 +22,7 @@ public class UserController {
     @ResponseBody
     @PostMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addUserGroup(@Valid @RequestBody UserPermissionRequest request){
-        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), userGroupService.addUserGroup(request.getUserId(), request.getGroupId()));
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Success adding group to user", userGroupService.addUserGroup(request.getUserId(), request.getGroupId()));
         return ResponseEntity.ok(response);
     }
 
@@ -30,7 +30,7 @@ public class UserController {
     @ResponseBody
     @DeleteMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> removeUserGroup(@Valid @RequestBody UserPermissionRequest request){
-        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), userGroupService.removeUserGroup(request.getUserId(), request.getGroupId()));
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Success removed group from user",userGroupService.removeUserGroup(request.getUserId(), request.getGroupId()));
         return ResponseEntity.ok(response);
     }
 }

@@ -15,6 +15,7 @@ import org.ukdw.authservice.service.GroupService;
 import org.ukdw.common.ResponseWrapper;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @RestController
@@ -54,7 +55,7 @@ public class GroupController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createGroup(@Valid @RequestBody GroupDTO request) {
         GroupEntity newGroup = new GroupEntity();
-        newGroup.setGroupname(request.getGroupname());
+        newGroup.setGroupname(request.getGroupname().trim().toUpperCase());
         if(request.getPermission().isPresent()){
             newGroup.setPermission(request.getPermission().get());
         }

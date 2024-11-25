@@ -68,7 +68,7 @@ public class GroupService {
     public Optional<GroupEntity> updateGroup(Long id, GroupDTO groupDetails) {
         return groupRepository.findById(id).map(group -> {
             if(!groupDetails.getGroupname().isBlank()){
-                group.setGroupname(groupDetails.getGroupname());
+                group.setGroupname(groupDetails.getGroupname().trim().toUpperCase());
             }
 
             if(groupDetails.getPermission().isPresent()){

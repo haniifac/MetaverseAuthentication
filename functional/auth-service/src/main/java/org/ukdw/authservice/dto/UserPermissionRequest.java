@@ -17,8 +17,8 @@ import lombok.Setter;
 @Setter
 public class UserPermissionRequest {
     @NotNull(message = "user id is required")
-    private long userId;
+    private Long userId;
 
     @NotNull(message = "group id is required")
-    private long groupId;
+    private Long groupId;
 }
