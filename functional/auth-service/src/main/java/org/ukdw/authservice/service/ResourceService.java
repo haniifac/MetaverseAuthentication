@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.ukdw.authservice.dto.ResourceDTO;
 import org.ukdw.authservice.entity.ResourceEntity;
 import org.ukdw.authservice.repository.ResourceRepository;
 import org.ukdw.common.exception.ResourceNotFoundException;
@@ -32,27 +33,12 @@ public class ResourceService {
         return resourceOpt.get();
     }
 
-    /*public ResourceEntity getResourceByName(String resourceName){
-        Optional<ResourceEntity> resourceOpt = resourceRepository.findByResourceName(resourceName);
-        if(resourceOpt.isEmpty()){
-            throw new ResourceNotFoundException("Resource: "+ resourceName + " not found");
-        }
-
-        return resourceOpt.get();
-    }*/
-
-    public ResourceEntity getResourceByBitmask(Long resourceBitmask){
-        Optional<ResourceEntity> resourceOpt = resourceRepository.findByResourceBitmask(resourceBitmask);
-        if(resourceOpt.isEmpty()){
-            throw new ResourceNotFoundException("Resource bitmask: "+ resourceBitmask + " not found");
-        }
-
-        return resourceOpt.get();
-    }
-
-    public ResourceEntity createResource(ResourceEntity resource){
-        Long resBitmask = calculateBitmask(resource.getResourceBitmask());
+    public ResourceEntity createResource(ResourceDTO newResource){
+        ResourceEntity resource = new ResourceEntity();
+        resource.setResourceName(newResource.getResourceName());
+        Long resBitmask = calculateBitmask(newResource.getResourceShift());
         resource.setResourceBitmask(resBitmask);
+
         return resourceRepository.save(resource);
     }
 
@@ -63,24 +49,6 @@ public class ResourceService {
         resourceRepository.deleteById(resourceId);
         return true;
     }
-
-    /*public boolean deleteResourceByBitmask(Long bitshift){
-        Long bitmask = calculateBitmask(bitshift);
-
-        resourceRepository.findByResourceBitmask(bitmask)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource with bitmask: " + bitmask + " not found"));
-
-//        resourceRepository.deleteByResourceBitmask(bitmask);
-        return true;
-    }*/
-
-    /*public boolean deleteResourceByName(String resourceName){
-        resourceRepository.findByResourceName(resourceName)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource name: " + resourceName + " not found"));
-
-        resourceRepository.deleteByResourceName(resourceName);
-        return true;
-    }*/
 
     private Long calculateBitmask(Long bitmaskShift) {
         return (long) Math.pow(2, bitmaskShift);

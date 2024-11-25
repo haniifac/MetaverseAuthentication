@@ -26,7 +26,7 @@ public class GroupEntity implements Serializable {
     @SequenceGenerator(name = "GROUP_SEQ", sequenceName = "GROUP_SEQ", allocationSize = 1)
     private long id;
 
-    @Column(name = "groupname", nullable = false)
+    @Column(name = "groupname", nullable = false, unique = true)
     private String groupname;
 
     @ManyToMany(mappedBy = "groups")

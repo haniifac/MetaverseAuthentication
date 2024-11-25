@@ -7,6 +7,7 @@ import org.ukdw.authservice.dto.GroupDTO;
 import org.ukdw.authservice.dto.GroupWithResourcesDTO;
 import org.ukdw.authservice.entity.GroupEntity;
 import org.ukdw.authservice.repository.GroupRepository;
+import org.ukdw.common.exception.RequestParameterErrorException;
 import org.ukdw.common.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -36,11 +37,15 @@ public class GroupService {
     }
 
     public GroupEntity findByGroupname(String groupname) {
-        return groupRepository.findByGroupname(groupname);
+        Optional<GroupEntity> group = groupRepository.findByGroupname(groupname);
+        if(group.isEmpty()) {
+            throw new ResourceNotFoundException("Group name: " + groupname + " did not exist");
+        }
+
+        return group.get();
     }
 
     public GroupWithResourcesDTO getGroupById(Long id) {
-//        return groupRepository.findById(id);
         Optional<GroupEntity> groupOpt = groupRepository.findById(id);
         if(groupOpt.isEmpty()){
             throw new ResourceNotFoundException("Group id: "+ id + " not found");
@@ -52,13 +57,18 @@ public class GroupService {
     }
 
     public GroupEntity createGroup(GroupEntity groupEntity) {
+        var groupOpt = groupRepository.findByGroupname(groupEntity.getGroupname());
+        if(groupOpt.isPresent()){
+            throw new RequestParameterErrorException("Group name: "+ groupEntity.getGroupname() + " is already exist");
+        }
+
         return groupRepository.save(groupEntity);
     }
 
     public Optional<GroupEntity> updateGroup(Long id, GroupDTO groupDetails) {
         return groupRepository.findById(id).map(group -> {
-            if(groupDetails.getGroupname().isPresent()){
-                group.setGroupname(groupDetails.getGroupname().get());
+            if(!groupDetails.getGroupname().isBlank()){
+                group.setGroupname(groupDetails.getGroupname());
             }
 
             if(groupDetails.getPermission().isPresent()){

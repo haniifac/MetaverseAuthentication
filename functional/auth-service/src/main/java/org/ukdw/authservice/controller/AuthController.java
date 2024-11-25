@@ -28,7 +28,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> signin(@RequestBody SignInRequest request) {
+    public ResponseEntity<?> signin(@Valid @RequestBody SignInRequest request) {
         UserAccountEntity userEntity = authService.signIn(request.getEmail(), request.getPassword());
         ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), userEntity);
         return ResponseEntity.ok(response);
@@ -36,7 +36,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> signup(@RequestBody SignUpRequest request) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest request) {
         UserAccountEntity userEntity = authService.signUp(request);
         ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), userEntity);
         return ResponseEntity.ok(response);

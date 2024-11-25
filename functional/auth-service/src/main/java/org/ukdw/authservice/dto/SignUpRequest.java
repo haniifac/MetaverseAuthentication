@@ -1,17 +1,18 @@
 package org.ukdw.authservice.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class SignUpRequest {
-
     @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            message = "Invalid email format"
+    )
     private String email;
 
     @NotBlank(message = "Password is required")
@@ -27,29 +28,23 @@ public class SignUpRequest {
 
     private String regNumber;
 
-    @NotBlank(message = "scope is required (student, teacher, admin)")
-    // student, teacher, admin
+    @NotBlank(message = "scope is required (student, teacher)")
+    @Pattern(
+            regexp = "^(student|teacher)$",
+            message = "Scope must be either 'student' or 'teacher'."
+    )
     private String scope;
 
-//    @NotBlank(message = "Name is required")
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String nim; // untuk mahasiswa
     private String nid; // untuk dosen
-//    private String imageUrl;
-//    private String studentId;
-//    private String teacherId;
-//    private String dayOfBirth;
-//    private String birthPlace;
     private String address;
     private String city;
     private String region;
     private String country;
     private String zipCode;
     private String gender;
-//    private String registerYear;
-//    private String employmentNumber;
     private String urlGoogleScholar;
-//    private String role;
 }

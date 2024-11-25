@@ -41,6 +41,7 @@ import java.util.Set;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.ukdw.common.dto.VerifyTokenDto;
+import org.ukdw.common.exception.RequestParameterErrorException;
 
 @Slf4j
 @Service
@@ -89,10 +90,6 @@ public class AuthService {
                 "teacher", () -> {
                     GroupEntity teacherGroup = groupService.findByGroupname("TEACHER");
                     userAccountEntity.getGroups().add(teacherGroup);
-                },
-                "admin", () -> {
-                    GroupEntity adminGroup = groupService.findByGroupname("ADMIN");
-                    userAccountEntity.getGroups().add(adminGroup);
                 }
         );
         Optional.ofNullable(request.getScope())

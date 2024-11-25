@@ -52,17 +52,15 @@ public class GroupController {
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     @ResponseBody
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createGroup(@RequestBody GroupDTO request) {
-        if(request.getGroupname().isEmpty() || request.getPermission().isEmpty()) {
-            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.BAD_REQUEST.value(), null));
+    public ResponseEntity<?> createGroup(@Valid @RequestBody GroupDTO request) {
+        GroupEntity newGroup = new GroupEntity();
+        newGroup.setGroupname(request.getGroupname());
+        if(request.getPermission().isPresent()){
+            newGroup.setPermission(request.getPermission().get());
         }
 
-        GroupEntity newGroup = new GroupEntity();
-        newGroup.setGroupname(request.getGroupname().get());
-        newGroup.setPermission(request.getPermission().get());
-
-        GroupEntity createdGroup = groupService.createGroup(newGroup);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdGroup);
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.CREATED.value(), "Success create new group",groupService.createGroup(newGroup));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // PUT - Update a group by ID

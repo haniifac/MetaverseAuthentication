@@ -1,10 +1,12 @@
 package org.ukdw.authservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.ukdw.authservice.dto.ResourceDTO;
 import org.ukdw.authservice.entity.ResourceEntity;
 import org.ukdw.authservice.service.ResourceService;
 
@@ -19,8 +21,8 @@ public class ResourceController {
     // Create a new resource
     @PostMapping
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
-    public ResponseEntity<ResourceEntity> createResource(@RequestBody ResourceEntity resourceEntity) {
-        ResourceEntity createdResource = resourceService.createResource(resourceEntity);
+    public ResponseEntity<ResourceEntity> createResource(@Valid @RequestBody ResourceDTO resource) {
+        ResourceEntity createdResource = resourceService.createResource(resource);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdResource);
     }
 
@@ -40,15 +42,6 @@ public class ResourceController {
         return ResponseEntity.ok(resource);
     }
 
-    // Update a resource
-    /*@PutMapping("/{id}")
-    public ResponseEntity<ResourceEntity> updateResource(
-            @PathVariable Long id,
-            @RequestBody ResourceEntity resourceEntity) {
-        ResourceEntity updatedResource = resourceService.updateResource(id, resourceEntity);
-        return ResponseEntity.ok(updatedResource);
-    }*/
-
     // Delete resource by ID
     @DeleteMapping("/{id}")
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
@@ -56,19 +49,5 @@ public class ResourceController {
         resourceService.deleteResourceById(id);
         return ResponseEntity.noContent().build();
     }
-
-    /*// Delete resource by bitmask
-    @DeleteMapping("/bitmask/{bitmask}")
-    public ResponseEntity<Void> deleteResourceByBitmask(@PathVariable Long bitmask) {
-        resourceService.deleteResourceByBitmask(bitmask);
-        return ResponseEntity.noContent().build();
-    }
-
-    // Delete resource by name
-    @DeleteMapping("/name/{resourceName}")
-    public ResponseEntity<Void> deleteResourceByName(@PathVariable String resourceName) {
-        resourceService.deleteResourceByName(resourceName);
-        return ResponseEntity.noContent().build();
-    }*/
 
 }

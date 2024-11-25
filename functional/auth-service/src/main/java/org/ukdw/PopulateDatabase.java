@@ -13,6 +13,7 @@ import org.ukdw.authservice.repository.ResourceRepository;
 import org.ukdw.authservice.repository.UserAccountRepository;
 import org.ukdw.authservice.service.ResourceService;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.List;
 
@@ -75,9 +76,9 @@ public class PopulateDatabase implements CommandLineRunner {
 
     private void createInitialUsers() {
         // Retrieve groups
-        GroupEntity studentGroup = groupRepository.findByGroupname("STUDENT");
-        GroupEntity teacherGroup = groupRepository.findByGroupname("TEACHER");
-        GroupEntity adminGroup = groupRepository.findByGroupname("ADMIN");
+        Optional<GroupEntity> studentGroupOpt = groupRepository.findByGroupname("STUDENT");
+        Optional<GroupEntity> teacherGroupOpt = groupRepository.findByGroupname("TEACHER");
+        Optional<GroupEntity> adminGroupOpt = groupRepository.findByGroupname("ADMIN");
 
         // Sample user data
         UserAccountEntity newUser2 = new UserAccountEntity(
@@ -87,7 +88,17 @@ public class PopulateDatabase implements CommandLineRunner {
                 "REG124",
                 "admin"
         );
-        newUser2.setGroups(Set.of(adminGroup));
+        adminGroupOpt.ifPresent(groupEntity -> newUser2.setGroups(Set.of(groupEntity)));
+
+        // Sample user data
+        UserAccountEntity newUser1 = new UserAccountEntity(
+                "student@example.com",
+                "student",
+                "password",
+                "REG128",
+                "student"
+        );
+        studentGroupOpt.ifPresent(groupEntity -> newUser1.setGroups(Set.of(groupEntity)));
 
         UserAccountEntity newUser3 = new UserAccountEntity(
                 "teacher@example.com",
@@ -96,37 +107,10 @@ public class PopulateDatabase implements CommandLineRunner {
                 "REG125",
                 "teacher"
         );
-        newUser3.setGroups(Set.of(teacherGroup));
-
-        UserAccountEntity newUser4 = new UserAccountEntity(
-          "admin2@example.com",
-          "admin2",
-          "password",
-          "REG125",
-          "admin"
-        );
-        newUser4.setGroups(Set.of(adminGroup));
-
-        UserAccountEntity teacher = new UserAccountEntity(
-                "dendy.prtha@staff.ukdw.ac.id",
-                "dendy",
-                "qwe123",
-                "TCR001",
-                "teacher"
-        );
-        teacher.setGroups(Set.of(teacherGroup));
-
-        UserAccountEntity student = new UserAccountEntity(
-                "prtha@student.ukdw.ac.id",
-                "prtha",
-                "qwe123",
-                "STD001",
-                "student"
-        );
-        student.setGroups(Set.of(studentGroup));
+        teacherGroupOpt.ifPresent(groupEntity -> newUser3.setGroups(Set.of(groupEntity)));
 
         // Save all users to the database in one save
-        userAccountRepository.saveAll(List.of(newUser2, newUser3, newUser4, teacher, student));
+        userAccountRepository.saveAll(List.of(newUser1, newUser2, newUser3));
     }
 
     private void createInitialResources(){

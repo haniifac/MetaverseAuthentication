@@ -1,5 +1,7 @@
 package org.ukdw.authservice.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +17,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AppsCheckPermissionRequest {
-    @NotNull(message = "feature code is required")
-    private long featureCode;
+    @NotNull(message = "Feature code is required")
+    private Long featureCode;
 }
