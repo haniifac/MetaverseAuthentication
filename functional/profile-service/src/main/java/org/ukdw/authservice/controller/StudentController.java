@@ -20,8 +20,8 @@ public class StudentController {
 
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,STUDENT', 511L, 1L)")
     @GetMapping
-    public ResponseEntity<?> getAllStudents(Pageable pageable) {
-        return new ResponseEntity<>(studentService.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<?> getAllStudents() {
+        return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
     }
 
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,STUDENT', 511L, 1L)")
@@ -40,14 +40,14 @@ public class StudentController {
 
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,STUDENT', 511L, 1L)")
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStudent(@PathVariable Long id, StudentEntity studentEntity) {
+    public ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody StudentEntity studentEntity) {
         return new ResponseEntity<>(studentService.update(id, studentEntity), HttpStatus.OK);
     }
 
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,STUDENT', 511L, 1L)")
+    /*@PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,STUDENT', 511L, 1L)")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStudent(@PathVariable Long id) {
         studentService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    }*/
 }

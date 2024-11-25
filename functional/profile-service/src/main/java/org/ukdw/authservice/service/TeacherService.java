@@ -1,11 +1,18 @@
 package org.ukdw.authservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.ukdw.authservice.dto.TeacherDTO;
 import org.ukdw.authservice.entity.TeacherEntity;
 import org.ukdw.authservice.repository.TeacherRepository;
+import org.ukdw.common.exception.RequestParameterErrorException;
+import org.ukdw.common.exception.ResourceNotFoundException;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,39 +20,65 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
 
-    public Page<TeacherEntity> findAll(Pageable pageable) {
-        return teacherRepository.findAll(pageable);
+    public List<TeacherEntity> findAll() {
+        return teacherRepository.findAll();
     }
 
     public TeacherEntity findById(Long id) {
-        return teacherRepository.findById(id).orElse(null);
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found by id: "+ id));
     }
 
     public TeacherEntity save(TeacherEntity teacherEntity) {
-        return teacherRepository.save(teacherEntity);
+        try {
+            return teacherRepository.save(teacherEntity);
+        } catch (DataIntegrityViolationException e) {
+            throw new RequestParameterErrorException("A teacher with the same ID already exists.");
+        }
     }
 
-    public void deleteById(Long id) {
-        teacherRepository.deleteById(id);
-    }
+    public TeacherEntity update(Long id, TeacherDTO teacherEntity) {
+        Optional<TeacherEntity> teacherOpt = teacherRepository.findById(id);
+        if (teacherOpt.isPresent()) {
+            TeacherEntity teacher = teacherOpt.get();
 
-    public TeacherEntity update(Long id, TeacherEntity teacherEntity) {
-        TeacherEntity teacher = teacherRepository.findById(id).orElse(null);
-        if (teacher != null) {
-            teacher.setFirstName(teacherEntity.getFirstName());
-            teacher.setLastName(teacherEntity.getLastName());
-            teacher.setNid(teacherEntity.getNid());
-            teacher.setAddress(teacherEntity.getAddress());
-            teacher.setPhoneNumber(teacherEntity.getPhoneNumber());
-            teacher.setRegion(teacherEntity.getRegion());
-            teacher.setCity(teacherEntity.getCity());
-            teacher.setCountry(teacherEntity.getCountry());
-            teacher.setZipCode(teacherEntity.getZipCode());
-            teacher.setGender(teacherEntity.getGender());
-            teacher.setGoogleScholar(teacherEntity.getGoogleScholar());
+            // Only update fields that are not null in the request
+            if (teacherEntity.getFirstName() != null) {
+                teacher.setFirstName(teacherEntity.getFirstName());
+            }
+            if (teacherEntity.getLastName() != null) {
+                teacher.setLastName(teacherEntity.getLastName());
+            }
+            if (teacherEntity.getNid() != null) {
+                teacher.setNid(teacherEntity.getNid());
+            }
+            if (teacherEntity.getAddress() != null) {
+                teacher.setAddress(teacherEntity.getAddress());
+            }
+            if (teacherEntity.getPhoneNumber() != null) {
+                teacher.setPhoneNumber(teacherEntity.getPhoneNumber());
+            }
+            if (teacherEntity.getRegion() != null) {
+                teacher.setRegion(teacherEntity.getRegion());
+            }
+            if (teacherEntity.getCity() != null) {
+                teacher.setCity(teacherEntity.getCity());
+            }
+            if (teacherEntity.getCountry() != null) {
+                teacher.setCountry(teacherEntity.getCountry());
+            }
+            if (teacherEntity.getZipCode() != null) {
+                teacher.setZipCode(teacherEntity.getZipCode());
+            }
+            if (teacherEntity.getGender() != null) {
+                teacher.setGender(teacherEntity.getGender());
+            }
+            if (teacherEntity.getGoogleScholar() != null) {
+                teacher.setGoogleScholar(teacherEntity.getGoogleScholar());
+            }
             return teacherRepository.save(teacher);
         }
-        return null;
+        throw new ResourceNotFoundException("Teacher not found by id: "+ id);
     }
 
 }

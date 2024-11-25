@@ -73,7 +73,7 @@ public class GroupController {
         if (updatedGroup.isPresent()){
             return ResponseEntity.ok(updatedGroup);
         }else{
-            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), String.format("id:%s not found", id), null));
+            return ResponseEntity.badRequest().body(new ResponseWrapper<>(HttpStatus.BAD_REQUEST.value(), String.format("id:%s not found", id), null));
         }
 
     }

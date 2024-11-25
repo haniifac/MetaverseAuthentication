@@ -51,11 +51,11 @@ public class PopulateDatabase implements CommandLineRunner {
             AttendanceRecord record1 = new AttendanceRecord(10L, currentTime.minus(30, ChronoUnit.MINUTES));
             record1.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
 
-            AttendanceRecord record2 = new AttendanceRecord(11L, currentTime.minus(20, ChronoUnit.MINUTES));
-            record2.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
+//            AttendanceRecord record2 = new AttendanceRecord(11L, currentTime.minus(20, ChronoUnit.MINUTES));
+//            record2.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
 
             records.add(record1);
-            records.add(record2);
+//            records.add(record2);
 
             // Set the records to the attendance entity
             mathAttendance.setRecords(records);

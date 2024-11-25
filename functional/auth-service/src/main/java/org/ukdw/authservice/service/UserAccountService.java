@@ -4,12 +4,14 @@ package org.ukdw.authservice.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukdw.authservice.dto.SignUpRequest;
 import org.ukdw.authservice.entity.UserAccountEntity;
 import org.ukdw.authservice.repository.UserAccountRepository;
+import org.ukdw.common.exception.RequestParameterErrorException;
 //import org.ukdw.authservice.dto.user.UserRoleDTO;
 //import org.ukdw.authservice.entity.GroupEntity;
 //import org.ukdw.authservice.entity.StudentEntity;
@@ -36,7 +38,12 @@ public class UserAccountService {
 
     @Transactional
     public UserAccountEntity createUserAccount(UserAccountEntity userAccount) {
-        return userAccountRepository.save(userAccount);
+        try{
+            var newAccount = userAccountRepository.save(userAccount);
+            return newAccount;
+        }catch (DataIntegrityViolationException ex){
+            throw new RequestParameterErrorException("A User with the same email or username already exists.");
+        }
     }
 
     @Transactional

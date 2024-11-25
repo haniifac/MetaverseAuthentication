@@ -21,7 +21,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.NOT_FOUND.value(),
                 "Resource Not Found",
                 ex.getMessage(),
                 Instant.now().toString()
