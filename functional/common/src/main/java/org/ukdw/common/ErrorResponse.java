@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
-    private String uri;
     private int status;
     private String error;
     private String message;

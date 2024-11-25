@@ -18,21 +18,9 @@ import java.util.Map;
 @RestControllerAdvice
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    /*@ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", Instant.now());
-        response.put("status", HttpStatus.NOT_FOUND.value());
-        response.put("error", "Resource Not Found");
-        response.put("message", ex.getMessage());
-        response.put("path", ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }*/
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Resource Not Found",
                 ex.getMessage(),
@@ -45,7 +33,6 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<ErrorResponse> handleRequestParameterErrorException(RequestParameterErrorException ex) {
         // Create an error response object with the exception message
         ErrorResponse errorResponse = new ErrorResponse(
-                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Request Parameter Error",
                 ex.getMessage(),
@@ -60,7 +47,6 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
         // Create an error response object with the exception message
         ErrorResponse errorResponse = new ErrorResponse(
-                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
                 HttpStatus.FORBIDDEN.value(),
                 "Access Denied",
                 ex.getMessage(),
@@ -87,7 +73,6 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(),
                 HttpStatus.FORBIDDEN.value(),
                 "Authorization Denied",
                 ex.getMessage(),

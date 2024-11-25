@@ -95,7 +95,7 @@ public class GroupController {
     @ResponseBody
     @PostMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addGroupPermission(@Valid @RequestBody GroupPermissionRequest request){
-        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), groupService.addGroupPermission(request.getGroupId(), request.getFeatureCode()));
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Success add permission to group", groupService.addGroupPermission(request.getGroupId(), request.getPermission()));
         return ResponseEntity.ok(response);
     }
 
@@ -103,7 +103,7 @@ public class GroupController {
     @ResponseBody
     @DeleteMapping(value = "/permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> removeGroupPermission(@Valid @RequestBody GroupPermissionRequest request){
-        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), groupService.removeGroupPermission(request.getGroupId(), request.getFeatureCode()));
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Success remove permission from group", groupService.removeGroupPermission(request.getGroupId(), request.getPermission()));
         return ResponseEntity.ok(response);
     }
 }

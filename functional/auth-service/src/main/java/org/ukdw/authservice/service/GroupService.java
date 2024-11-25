@@ -89,23 +89,25 @@ public class GroupService {
 
     public boolean addGroupPermission(Long id, Long permission){
         Optional<GroupEntity> groupOpt = groupRepository.findById(id);
-        if(groupOpt.isPresent()){
-            GroupEntity group = groupOpt.get();
-            group.addRoleOrPermission(permission);
-            groupRepository.save(group);
-            return true;
+        if(groupOpt.isEmpty()){
+            throw new ResourceNotFoundException("Group id: " + id + " is not found");
         }
-        return false;
+
+        GroupEntity group = groupOpt.get();
+        group.addRoleOrPermission(permission);
+        groupRepository.save(group);
+        return true;
     }
 
     public boolean removeGroupPermission(Long id, Long permission){
         Optional<GroupEntity> groupOpt = groupRepository.findById(id);
-        if(groupOpt.isPresent()){
-            GroupEntity group = groupOpt.get();
-            group.removeRoleOrPermission(permission);
-            groupRepository.save(group);
-            return true;
+        if(groupOpt.isEmpty()){
+            throw new ResourceNotFoundException("Group id: " + id + " is not found");
         }
-        return false;
+
+        GroupEntity group = groupOpt.get();
+        group.removeRoleOrPermission(permission);
+        groupRepository.save(group);
+        return true;
     }
 }
