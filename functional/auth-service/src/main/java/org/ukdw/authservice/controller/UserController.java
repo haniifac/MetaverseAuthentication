@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ukdw.authservice.dto.UserPermissionRequest;
+import org.ukdw.authservice.entity.UserAccountEntity;
 import org.ukdw.authservice.repository.UserAccountRepository;
 import org.ukdw.authservice.service.UserGroupService;
 import org.ukdw.common.ResponseWrapper;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +32,33 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserbyId(String internalHeader, @PathVariable(value = "id") Long id){
+        Optional<UserAccountEntity> user = userAccountRepository.findById(id);
+        if(user.isEmpty()){
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), "User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(response);
+        }else{
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), user.get());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping(value = "exist/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> isUserExist(@RequestHeader("X-Internal") String internalHeader, @PathVariable(value = "id") Long id){
+        if(!internalHeader.equals("secret")){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
+        }
+
+        Optional<UserAccountEntity> user = userAccountRepository.findById(id);
+        if(user.isEmpty()){
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), "User not found", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(response);
+        }else{
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "User exist", true);
+            return ResponseEntity.ok(response);
+        }
+    }
 
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     @ResponseBody

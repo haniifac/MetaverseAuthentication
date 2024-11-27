@@ -28,3 +28,9 @@ eureka:
 logging:
   level:
     org.springframework.web: DEBUG
+
+# auth service
+users:
+  service:
+    url: http://AUTH-SERVICE/users
+    user-exist-url: ${users.service.url}/exist

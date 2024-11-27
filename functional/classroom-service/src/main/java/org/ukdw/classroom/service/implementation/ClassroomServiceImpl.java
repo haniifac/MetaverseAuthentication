@@ -1,8 +1,16 @@
 package org.ukdw.classroom.service.implementation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.ukdw.classroom.client.UserClient;
+import org.ukdw.classroom.dto.client.FindUserByIdRequest;
+import org.ukdw.classroom.dto.client.FindUserByIdResponse;
 import org.ukdw.common.exception.RequestParameterErrorException;
 import org.ukdw.common.exception.ResourceNotFoundException;
 import org.ukdw.classroom.dto.request.UpdateClassroomRequest;
@@ -16,8 +24,8 @@ import org.ukdw.classroom.service.ClassroomService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
+@Slf4j
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
 
@@ -30,6 +38,9 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Autowired
     @Lazy
     private AttendanceService attendanceService;
+
+    @Autowired
+    private UserClient userClient;
 
     // CRUD operations for Classroom
     @Override
@@ -118,6 +129,10 @@ public class ClassroomServiceImpl implements ClassroomService {
             throw new RequestParameterErrorException("Teacher already exists in the classroom");
         }
 
+        if(!this.isUserExist(teacherId)){
+            throw new ResourceNotFoundException("User not found with id: "+ teacherId);
+        }
+
         classroom.getTeacherIds().add(teacherId);
         classroomRepository.save(classroom);
         return true;
@@ -148,6 +163,10 @@ public class ClassroomServiceImpl implements ClassroomService {
             throw new RequestParameterErrorException("Student already exists in the classroom");
         }
 
+        if(!this.isUserExist(studentId)){
+            throw new ResourceNotFoundException("User not found with id: "+ studentId);
+        }
+
         classroom.getStudentIds().add(studentId);
         classroomRepository.save(classroom);
         return true;
@@ -164,5 +183,23 @@ public class ClassroomServiceImpl implements ClassroomService {
         classroom.getStudentIds().remove(studentId);
         classroomRepository.save(classroom);
         return true;
+    }
+
+    private boolean isUserExist(Long id){
+        try{
+            log.info("checking if user exist with id {}", id);
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            FindUserByIdRequest req = new FindUserByIdRequest(id);
+            var response = userClient.findUserExistbyId(req, request);
+
+            ObjectMapper mapper = new ObjectMapper();
+            var convert = mapper.convertValue(response,  FindUserByIdResponse.class);
+
+            log.info("Response: {}", convert.getMessage());
+            return convert.isUserExist();
+        }catch (Exception e) {
+            log.info("failed to check user exist: {}", e.getMessage());
+            return false;
+        }
     }
 }

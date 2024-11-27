@@ -73,6 +73,11 @@ public class ClassroomController {
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
     public ResponseEntity<?> addTeacherToClassroom(@PathVariable Long classroomId, @Valid @RequestBody AddRemoveClassroomTeacherRequest request) {
         Boolean isAddTeacher = classroomServiceImpl.addTeacherToClassroom(classroomId, request.getTeacherId());
+        if(!isAddTeacher){
+            ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), isAddTeacher);
+            return ResponseEntity.ok(response);
+        }
+
         ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),isAddTeacher);
         return ResponseEntity.ok(response);
     }
