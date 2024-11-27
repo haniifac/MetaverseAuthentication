@@ -29,8 +29,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> signin(@Valid @RequestBody SignInRequest request) {
-        UserAccountEntity userEntity = authService.signIn(request.getEmail(), request.getPassword());
-        ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), userEntity);
+        ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Signin success", authService.signIn(request.getEmail(), request.getPassword()));
         return ResponseEntity.ok(response);
     }
 

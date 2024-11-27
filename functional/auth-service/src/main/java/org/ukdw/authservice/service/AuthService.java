@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import org.ukdw.authservice.client.ProfileClient;
 import org.ukdw.authservice.dto.SignUpRequest;
+import org.ukdw.authservice.dto.SigninResponse;
 import org.ukdw.authservice.dto.StudentRequestDto;
 import org.ukdw.authservice.dto.TeacherRequestDto;
 import org.ukdw.authservice.entity.*;
@@ -111,7 +112,7 @@ public class AuthService {
         return userAccountEntitySaved;
     }
 
-    public UserAccountEntity signIn(String email, String password) throws ScNotFoundException, BadRequestException {
+    public SigninResponse signIn(String email, String password) throws ScNotFoundException, BadRequestException {
         try {
             UserAccountEntity accountEntity = userAccountRepository.findByEmailAndPassword(email, password);
             if (accountEntity == null) {
@@ -125,7 +126,7 @@ public class AuthService {
             accountEntity.setAccessToken(token);
             accountEntity.setRefreshToken(refreshToken);
             userAccountRepository.save(accountEntity);
-            return accountEntity;
+            return new SigninResponse(accountEntity.getAccessToken(), accountEntity.getRefreshToken());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
