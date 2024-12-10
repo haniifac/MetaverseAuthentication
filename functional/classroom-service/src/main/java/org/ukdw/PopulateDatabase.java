@@ -35,8 +35,8 @@ public class PopulateDatabase implements CommandLineRunner {
             mathClassroom.setDescription("Kelas Univ Indonesia, Membahas tentang blablabla");
             mathClassroom.setSemester("Genap");
             mathClassroom.setTahunAjaran("2024/2025");
-            mathClassroom.setTeacherIds(Set.of(1L, 2L));  // Example teacher IDs
-            mathClassroom.setStudentIds(Set.of(10L, 11L, 12L));  // Example student IDs
+            mathClassroom.setTeacherIds(Set.of(3L));  // Example teacher IDs
+            mathClassroom.setStudentIds(Set.of(1L));  // Example student IDs
             ClassroomEntity savedClassroom = classroomServiceImpl.createClassroom(mathClassroom);
 
             Instant currentTime = Instant.now();
@@ -48,13 +48,13 @@ public class PopulateDatabase implements CommandLineRunner {
 
             // Example of students' attendance times
             Set<AttendanceRecord> records = new HashSet<>();
-            AttendanceRecord record1 = new AttendanceRecord(10L, currentTime.minus(30, ChronoUnit.MINUTES));
-            record1.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
+//            AttendanceRecord record1 = new AttendanceRecord(1L, currentTime.minus(30, ChronoUnit.MINUTES));
+//            record1.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
 
 //            AttendanceRecord record2 = new AttendanceRecord(11L, currentTime.minus(20, ChronoUnit.MINUTES));
 //            record2.setAttendance(mathAttendance);  // Set the reference to the parent AttendanceEntity
 
-            records.add(record1);
+//            records.add(record1);
 //            records.add(record2);
 
             // Set the records to the attendance entity

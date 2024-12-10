@@ -50,3 +50,7 @@ profile:
     student-path: ${profile.service.url}/students
     teacher-path: ${profile.service.url}/teachers
 
+users:
+  service:
+    internal-secret: CaNipXZWYxzx2Buah8xyaFiAUunRJMFB
+

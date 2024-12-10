@@ -20,13 +20,16 @@ public class UserClient {
     @Value("${users.service.user-exist-url}")
     private String findUser;
 
+    @Value("${users.service.internal-secret}")
+    private String internalSecret;
+
     private final RestTemplate restTemplateCommon;
 
     public Object findUserExistbyId(FindUserByIdRequest request, HttpServletRequest httpServletRequest){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", httpServletRequest.getHeader("Authorization"));
         headers.set("Content-Type", "application/json");
-        headers.set("X-internal", "secret");
+        headers.set("X-internal", internalSecret);
 
         HttpEntity<FindUserByIdRequest> entity = new HttpEntity<>(request, headers);
         log.info("checking to {} if there is user id: {}", findUser, request.getUserId());

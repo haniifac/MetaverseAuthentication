@@ -3,6 +3,8 @@ package org.ukdw.authservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.bouncycastle.crypto.digests.ISAPDigest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ public class UserController {
     private final UserGroupService userGroupService;
     private final UserAccountRepository userAccountRepository;
 
+    @Value("${users.service.internal-secret}")
+    private String internalSecret;
+
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN', 511L)")
     @ResponseBody
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUserbyId(String internalHeader, @PathVariable(value = "id") Long id){
+    public ResponseEntity<?> getUserbyId( @PathVariable(value = "id") Long id){
         Optional<UserAccountEntity> user = userAccountRepository.findById(id);
         if(user.isEmpty()){
             ResponseWrapper<?> response = new ResponseWrapper<>(HttpStatus.NOT_FOUND.value(), "User not found");
@@ -46,7 +51,7 @@ public class UserController {
 
     @GetMapping(value = "exist/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> isUserExist(@RequestHeader("X-Internal") String internalHeader, @PathVariable(value = "id") Long id){
-        if(!internalHeader.equals("secret")){
+        if(!internalHeader.equals(internalSecret)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 

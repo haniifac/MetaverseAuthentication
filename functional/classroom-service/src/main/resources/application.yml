@@ -34,3 +34,4 @@ users:
   service:
     url: http://AUTH-SERVICE/users
     user-exist-url: ${users.service.url}/exist
+    internal-secret: CaNipXZWYxzx2Buah8xyaFiAUunRJMFB
