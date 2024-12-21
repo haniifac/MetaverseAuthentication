@@ -37,7 +37,7 @@ public class AuthController {
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest request) {
         UserAccountEntity userEntity = authService.signUp(request);
-        ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), userEntity);
+        ResponseWrapper<UserAccountEntity> response = new ResponseWrapper<>(HttpStatus.OK.value(), "Signup success",userEntity);
         return ResponseEntity.ok(response);
     }
 
