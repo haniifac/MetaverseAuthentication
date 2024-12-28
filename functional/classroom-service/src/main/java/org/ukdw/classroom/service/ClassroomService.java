@@ -12,5 +12,6 @@ public interface ClassroomService {
     public Optional<ClassroomEntity> getClassroomById(Long classroomId);
     public ClassroomEntity updateClassroom(Long classroomId, UpdateClassroomRequest updatedClassroom);
     public void deleteClassroom(Long classroomId);
+//    public void deleteAllClassroom();
     public boolean isStudentEnrolled(Long classroomId, Long studentId);
 }

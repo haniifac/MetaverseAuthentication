@@ -27,6 +27,7 @@ public class ClassroomController {
     @Autowired
     private ClassroomServiceImpl classroomServiceImpl;
 
+    // TODO: benerin! harus pake classroomDTO biar class name nya gaboleh null
     @PostMapping
     @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
     public ResponseEntity<ClassroomEntity> createClassroom(@RequestBody ClassroomEntity classroom) {
@@ -55,14 +56,14 @@ public class ClassroomController {
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found with id:" + id));
     }
 
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
     @PutMapping("/{id}")
     public ResponseEntity<ClassroomEntity> updateClassroom(@PathVariable Long id, @RequestBody UpdateClassroomRequest request) {
         ClassroomEntity updated = classroomServiceImpl.updateClassroom(id, request);
         return ResponseEntity.ok(updated);
     }
 
-    @PreAuthorize("@privilegeVerifierService.hasPrivilege('ADMIN,TEACHER', 511L, 3L)")
+    @PreAuthorize("@privilegeVerifierService.hasPrivilege('TEACHER,ADMIN', 3L, 511L)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClassroom(@PathVariable Long id) {
         classroomServiceImpl.deleteClassroom(id);

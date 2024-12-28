@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.ukdw.classroom.client.UserClient;
@@ -44,6 +45,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     // CRUD operations for Classroom
     @Override
+    @Transactional
     public ClassroomEntity createClassroom(ClassroomEntity classroom) {
         return classroomRepository.save(classroom);
     }
@@ -103,6 +105,12 @@ public class ClassroomServiceImpl implements ClassroomService {
             throw new ResourceNotFoundException("Classroom not found with id " + classroomId);
         }
     }
+//
+//    @Transactional
+//    @Override
+//    public void deleteAllClassroom(){
+//        classroomRepository.deleteAll();
+//    }
 
     public boolean isStudentEnrolled(Long classroomId, Long studentId){
         Optional<ClassroomEntity> classroomOpt = classroomRepository.findById(classroomId);
@@ -185,7 +193,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         return true;
     }
 
-    private boolean isUserExist(Long id){
+    public boolean isUserExist(Long id){
         try{
             log.info("checking if user exist with id {}", id);
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

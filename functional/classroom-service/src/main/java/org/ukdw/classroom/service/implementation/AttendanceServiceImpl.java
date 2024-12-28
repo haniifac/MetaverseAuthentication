@@ -3,6 +3,7 @@ package org.ukdw.classroom.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ukdw.common.exception.AccessDeniedException;
 import org.ukdw.common.exception.RequestParameterErrorException;
 import org.ukdw.common.exception.ResourceNotFoundException;
@@ -38,6 +39,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private ClassroomService classroomService;
 
     @Override
+    @Transactional
     public AttendanceEntity createAttendance(Long classroomId, String openTimeStr, String closeTimeStr) {
         // Find the classroom by ID to associate with the attendance
         ClassroomEntity classroom = classroomRepository.findById(classroomId)
