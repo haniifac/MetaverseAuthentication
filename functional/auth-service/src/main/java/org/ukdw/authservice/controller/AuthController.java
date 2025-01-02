@@ -41,6 +41,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    // Endpoint untuk check permission masuk classroom berdasarkan group yang telah di assign ke user
     @ResponseBody
     @PostMapping(value = "/apps-check-permission", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> appsCheckPermission(@Valid @RequestBody AppsCheckPermissionRequest request) {
@@ -51,9 +52,10 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    // Endpoint untuk check permission akses endpoint API sesuai group yang telah di assign ke user
     @ResponseBody
     @PostMapping(value = "/check-permission")
-    public ResponseEntity<?> appsCheckPermission(@Valid @RequestBody CheckPermissionRequest checkPermissionRequest, HttpServletRequest request) {
+    public ResponseEntity<?> checkPermission(@Valid @RequestBody CheckPermissionRequest checkPermissionRequest, HttpServletRequest request) {
         var response = AppsCheckPermissionResponse.builder()
                 .status(authService.canAccessFeature(checkPermissionRequest.getRoles(), checkPermissionRequest.getPermissions(), request))
                 .build();
@@ -69,9 +71,9 @@ public class AuthController {
         String token = authHeader.substring(7);
         try {
             var verifyTokenDto = authService.isTokenValidAndNotExpired(token);
-            return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), verifyTokenDto));
+            return ResponseEntity.ok(new ResponseWrapper<>(HttpStatus.OK.value(), "Token is valid",verifyTokenDto));
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(new ResponseWrapper<>(e.getStatusCode().value(), e.getReason()));
+            return ResponseEntity.status(e.getStatusCode()).body(new ResponseWrapper<>(e.getStatusCode().value(), e.getReason(), null));
         }
     }
 

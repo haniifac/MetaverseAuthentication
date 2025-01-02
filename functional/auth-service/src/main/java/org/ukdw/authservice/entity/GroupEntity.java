@@ -22,8 +22,10 @@ import java.util.Set;
 @Table(name = "groups")
 public class GroupEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GROUP_SEQ")
-    @SequenceGenerator(name = "GROUP_SEQ", sequenceName = "GROUP_SEQ", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "GROUP_SEQ")
+//    @SequenceGenerator(name = "GROUP_SEQ", sequenceName = "GROUP_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
     private long id;
 
     @Column(name = "groupname", nullable = false, unique = true)

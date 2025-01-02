@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:authdbtest;MODE=LEGACY;DATABASE_TO_LOWER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS authentication;
+    driverClassName: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+  h2:
+    console.enabled: true
+
+eureka:
+  client.enabled: false
+
+# profile service
+profile:
+  service:
+    url: http://PROFILE-SERVICE/profile-service
+    student-path: ${profile.service.url}/students
+    teacher-path: ${profile.service.url}/teachers
+
+users:
+  service:
+    internal-secret: test-secret

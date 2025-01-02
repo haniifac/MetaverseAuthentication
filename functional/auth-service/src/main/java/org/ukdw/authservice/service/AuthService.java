@@ -190,7 +190,7 @@ public class AuthService {
             String username = jwtService.extractUserName(token);
             UserDetails userDetails = userDetailsService().loadUserByUsername(username);
             if (userDetails == null || jwtService.isTokenExpired(token)) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired token");
             }
 
             Claims claims = jwtService.extractAllClaims(token);
@@ -199,14 +199,18 @@ public class AuthService {
             int permission = ((Double) claims.get("permission")).intValue();
 
             return VerifyTokenDto.builder().id(id).permission(permission).role(role).build();
-        } catch (JwtException | UsernameNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token", e);
+        } catch (JwtException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token format", e);
+        } catch (UsernameNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token owner is not available or has been deleted", e);
         }
     }
 
     public String refreshAccessToken(String refreshToken) throws ParseException {
         String username = jwtService.extractUserName(refreshToken);
         UserDetails userDetails = userDetailsService().loadUserByUsername(username);
+//        Boolean debugres = jwtService.validateRefreshToken(refreshToken, userDetails);
+//        log.debug(String.valueOf(debugres));
         if (jwtService.validateRefreshToken(refreshToken, userDetails)) {
             return jwtService.generateToken(userDetails);
         } else {

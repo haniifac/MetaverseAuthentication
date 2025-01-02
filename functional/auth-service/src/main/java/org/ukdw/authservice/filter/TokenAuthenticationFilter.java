@@ -1,23 +1,33 @@
 package org.ukdw.authservice.filter;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 import org.ukdw.authservice.config.AppProperties;
 import org.ukdw.authservice.service.AuthService;
 import org.ukdw.authservice.service.JwtService;
+import org.ukdw.common.ErrorResponse;
+import org.ukdw.common.exception.ResourceNotFoundException;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -28,12 +38,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final AppProperties appProperties;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JwtException {
         final String token;
         final String username;
         final String authHeader = request.getHeader(AUTHORIZATION);
@@ -44,7 +53,21 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         token = authHeader.substring(7);
-        username = jwtService.extractUserName(token);
+        try {
+            username = jwtService.extractUserName(token);
+        } catch (JwtException e){
+            ErrorResponse errorResponse = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "JwtException",
+                    e.getMessage(),
+                    Instant.now().toString()
+            );
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write(convertToJson(errorResponse));  // Convert ErrorResponse to JSON
+            return;  // Exit early to prevent further processing
+        }
+
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = authService.userDetailsService()
                     .loadUserByUsername(username);
@@ -65,4 +88,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 //        return appProperties.getExcludeFilter().stream()
 //                .anyMatch(p -> pathMatcher.match(p, request.getServletPath()));
 //    }
+
+    // Method to convert the ErrorResponse to JSON
+    private String convertToJson(Object object) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            return "{}";  // Return empty JSON object in case of error
+        }
+    }
 }

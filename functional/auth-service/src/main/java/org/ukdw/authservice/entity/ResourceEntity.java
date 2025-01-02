@@ -12,8 +12,9 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "resource")
 public class ResourceEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESOURCE_GEN")
-    @SequenceGenerator(name = "RESOURCE_GEN", sequenceName = "RESOURCE_SEQ")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "RESOURCE_GEN")
+//    @SequenceGenerator(name = "RESOURCE_GEN", sequenceName = "RESOURCE_SEQ")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
     private Long resourceId;
 
