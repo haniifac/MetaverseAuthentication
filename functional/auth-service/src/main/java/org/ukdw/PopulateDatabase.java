@@ -70,7 +70,7 @@ public class PopulateDatabase implements CommandLineRunner {
         GroupEntity adminGroup = new GroupEntity();
         adminGroup.setGroupname("ADMIN");
 //        adminGroup.setPermission(511L);
-        adminGroup.setPermission(99999L);
+        adminGroup.setPermission(65535L);
         groupRepository.save(adminGroup);
     }
 

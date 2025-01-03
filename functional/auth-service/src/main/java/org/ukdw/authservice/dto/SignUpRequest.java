@@ -10,8 +10,8 @@ import lombok.*;
 public class SignUpRequest {
     @NotBlank(message = "Email is required")
     @Pattern(
-            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            message = "Invalid email format"
+            regexp = "^[a-zA-Z0-9._%+-]+@(staff|ti)\\.ukdw\\.ac\\.id$",
+            message = "Invalid email format. Make sure it's staff / ti email account"
     )
     private String email;
 
