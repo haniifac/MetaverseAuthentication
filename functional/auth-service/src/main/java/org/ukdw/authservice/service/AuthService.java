@@ -5,8 +5,12 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 //import org.ukdw.authservice.dto.request.auth.SignUpRequest;
 //import org.ukdw.authservice.dto.response.RefreshAccessTokenResponse;
 //import org.ukdw.authservice.dto.user.UserRoleDTO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import org.ukdw.authservice.client.ProfileClient;
 import org.ukdw.authservice.dto.SignUpRequest;
@@ -56,6 +61,9 @@ public class AuthService {
     private final ProfileClient profileClient;
     private final GroupService groupService;
 
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+
     public boolean signOut(String accessToken) {
        /* try {
             //sign out means revoke apps access from user account
@@ -78,7 +86,7 @@ public class AuthService {
         UserAccountEntity userAccountEntity = new UserAccountEntity(
                 request.getEmail(),
                 request.getUsername(),
-                request.getPassword(),
+                passwordEncoder.encode(request.getPassword()),
                 request.getRegNumber(),
                 request.getScope()
         );
@@ -114,7 +122,9 @@ public class AuthService {
 
     public SigninResponse signIn(String email, String password) throws ScNotFoundException, BadRequestException {
         try {
-            UserAccountEntity accountEntity = userAccountRepository.findByEmailAndPassword(email, password);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+            UserAccountEntity accountEntity = userAccountRepository.findByEmail(email);
             if (accountEntity == null) {
                 throw new AuthenticationExceptionImpl("email or password is wrong. email :" + email);
             }
@@ -132,13 +142,13 @@ public class AuthService {
         }
     }
 
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            UserAccountEntity accountEntity = userAccountRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            return new CustomUserDetails(accountEntity);
-        };
-    }
+//    public UserDetailsService userDetailsService() {
+//        return username -> {
+//            UserAccountEntity accountEntity = userAccountRepository.findByUsername(username)
+//                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//            return new CustomUserDetails(accountEntity);
+//        };
+//    }
 
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
@@ -188,7 +198,7 @@ public class AuthService {
     public VerifyTokenDto isTokenValidAndNotExpired(String token) {
         try {
             String username = jwtService.extractUserName(token);
-            UserDetails userDetails = userDetailsService().loadUserByUsername(username);
+            UserDetails userDetails = userAccountService.userDetailsService().loadUserByUsername(username);
             if (userDetails == null || jwtService.isTokenExpired(token)) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired token");
             }
@@ -208,7 +218,7 @@ public class AuthService {
 
     public String refreshAccessToken(String refreshToken) throws ParseException {
         String username = jwtService.extractUserName(refreshToken);
-        UserDetails userDetails = userDetailsService().loadUserByUsername(username);
+        UserDetails userDetails = userAccountService.userDetailsService().loadUserByUsername(username);
 //        Boolean debugres = jwtService.validateRefreshToken(refreshToken, userDetails);
 //        log.debug(String.valueOf(debugres));
         if (jwtService.validateRefreshToken(refreshToken, userDetails)) {

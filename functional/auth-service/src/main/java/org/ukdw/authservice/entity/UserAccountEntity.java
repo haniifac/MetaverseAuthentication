@@ -33,7 +33,7 @@ public class UserAccountEntity {
     @Getter
     private String username;
 
-    @Column(name = "password", length = 40)
+    @Column(name = "password")
     @Setter
     @Getter
     private String password;

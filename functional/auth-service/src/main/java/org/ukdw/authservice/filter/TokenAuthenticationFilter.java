@@ -13,6 +13,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -23,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.ukdw.authservice.config.AppProperties;
 import org.ukdw.authservice.service.AuthService;
 import org.ukdw.authservice.service.JwtService;
+import org.ukdw.authservice.service.UserAccountService;
 import org.ukdw.common.ErrorResponse;
 import org.ukdw.common.exception.ResourceNotFoundException;
 
@@ -34,9 +36,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Component
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthService authService;
+//    private final AuthService authService;
     private final JwtService jwtService;
-    private final AppProperties appProperties;
+//    private final AppProperties appProperties;
+    private final UserAccountService userAccountService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -69,13 +72,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = authService.userDetailsService()
+            UserDetails userDetails = userAccountService.userDetailsService()
                     .loadUserByUsername(username);
             if (jwtService.isTokenValid(token, userDetails)) {
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                securityContext.setAuthentication(authToken);
+                SecurityContextHolder.setContext(securityContext);
+//                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         filterChain.doFilter(request, response);

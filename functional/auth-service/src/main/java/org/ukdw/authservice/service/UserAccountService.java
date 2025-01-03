@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukdw.authservice.dto.SignUpRequest;
+import org.ukdw.authservice.entity.CustomUserDetails;
 import org.ukdw.authservice.entity.UserAccountEntity;
 import org.ukdw.authservice.repository.UserAccountRepository;
 import org.ukdw.common.exception.RequestParameterErrorException;
@@ -91,6 +94,28 @@ public class UserAccountService {
         // Save the updated user entity
         userAccountRepository.save(updatedUser);
         return true;
+    }
+
+    public UserDetailsService userDetailsService() {
+        return value -> {
+            UserAccountEntity accountEntity;
+
+            // Check if the value contains '@' to identify it as an email
+            if (value.contains("@")) {
+                accountEntity = userAccountRepository.findByEmail(value);
+                if(accountEntity == null){
+                    throw new UsernameNotFoundException("User not found with email: " + value);
+                }
+            } else {
+                accountEntity = userAccountRepository.findByUsername(value)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + value));
+            }
+
+//            UserAccountEntity accountEntity = userAccountRepository.findByUsername(username)
+//                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            return new CustomUserDetails(accountEntity);
+        };
     }
 }
 

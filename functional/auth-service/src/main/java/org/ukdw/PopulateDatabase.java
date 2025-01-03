@@ -2,6 +2,7 @@ package org.ukdw;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.ukdw.authservice.entity.GroupEntity;
@@ -12,6 +13,7 @@ import org.ukdw.authservice.repository.GroupRepository;
 import org.ukdw.authservice.repository.ResourceRepository;
 import org.ukdw.authservice.repository.UserAccountRepository;
 import org.ukdw.authservice.service.ResourceService;
+import org.ukdw.authservice.service.UserAccountService;
 
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +23,9 @@ import java.util.List;
 public class PopulateDatabase implements CommandLineRunner {
     @Autowired
     private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -84,7 +89,7 @@ public class PopulateDatabase implements CommandLineRunner {
         UserAccountEntity newUser2 = new UserAccountEntity(
                 "admin@example.com",
                 "admin",
-                "password",
+                passwordEncoder.encode("password"),
                 "REG124",
                 "admin"
         );
@@ -94,7 +99,7 @@ public class PopulateDatabase implements CommandLineRunner {
         UserAccountEntity newUser1 = new UserAccountEntity(
                 "student@example.com",
                 "student",
-                "password",
+                passwordEncoder.encode("password"),
                 "REG128",
                 "student"
         );
@@ -103,7 +108,7 @@ public class PopulateDatabase implements CommandLineRunner {
         UserAccountEntity newUser3 = new UserAccountEntity(
                 "teacher@example.com",
                 "teacher",
-                "password",
+                passwordEncoder.encode("password"),
                 "REG125",
                 "teacher"
         );
