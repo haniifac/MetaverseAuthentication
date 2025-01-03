@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -94,6 +95,9 @@ class AuthControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setup() throws ParseException {
         userAccountRepository.deleteAll();
@@ -133,7 +137,7 @@ class AuthControllerTest {
         // Mock for test setup
         UserAccountEntity mockUser = new UserAccountEntity();
         mockUser.setEmail("student@example.com");
-        mockUser.setPassword("password123");
+        mockUser.setPassword(passwordEncoder.encode("password123"));
         userAccountRepository.save(mockUser);
 
         when(jwtService.generateToken(any())).thenReturn("mockToken");
@@ -329,11 +333,11 @@ class AuthControllerTest {
                 Arguments.of("student@example.com", "password123", 200, "data.accessToken", "mockToken"),
                 // Invalid credentials
                 Arguments.of("invaliduser", "wrongpassword", 401, "data.message", "email or password is wrong. email :invaliduser"),
-                // Empty username
+                // Empty email
                 Arguments.of("", "password123", 400, "data.message", "email is required"),
                 // Empty password
                 Arguments.of("testuser", "", 400, "data.message", "password is required"),
-                // Invalid username and password
+                // Invalid email and password
                 Arguments.of("unknown", "unknown", 401, "data.message", "email or password is wrong. email :unknown")
         );
     }
@@ -354,17 +358,17 @@ class AuthControllerTest {
     private static Stream<Arguments> signupTestDataProvider() {
         return Stream.of(
                 // Successful signup student
-                Arguments.of("testStudent", "testStudent@student.ukdw.id", "password123", "student", 200, "message", "Signup success"),
+                Arguments.of("testStudent", "testStudent@ti.ukdw.ac.id", "password123", "student", 200, "message", "Signup success"),
                 // Successful signup teacher
-                Arguments.of("testTeacher", "testTeacher@staff.ukdw.id", "password123", "teacher", 200, "message", "Signup success"),
+                Arguments.of("testTeacher", "testTeacher@staff.ukdw.ac.id", "password123", "teacher", 200, "message", "Signup success"),
                 // Invalid username format
-                Arguments.of("!-.1", "testStudent@student.ukdw.ac.id", "password123", "student",400, "data.message", "Username must be 5-40 characters long, start with a letter, and only contain letters, numbers, underscores, or dots. It cannot start or end with an underscore or dot."),
+                Arguments.of("!-.1", "testStudent@ti.ukdw.ac.id", "password123", "student",400, "data.message", "Username must be 5-40 characters long, start with a letter, and only contain letters, numbers, underscores, or dots. It cannot start or end with an underscore or dot."),
                 // Invalid email format
-                Arguments.of("testuser", "user@test", "password123", "student", 400, "data.message", "Invalid email format"),
+                Arguments.of("testuser", "user@test", "password123", "student", 400, "data.message", "Invalid email format. Make sure it's staff / ti email account"),
                 // Invalid password length
-                Arguments.of("testuser", "testuser@student.ukdw.id", "aaaa", "student",400, "data.message", "Password must be between 5 and 40 characters"),
+                Arguments.of("testuser", "testuser@ti.ukdw.ac.id", "aaaa", "student",400, "data.message", "Password must be between 5 and 40 characters"),
                 // Invalid scope (only accept student and teacher for scope param)
-                Arguments.of("testuser", "testuser@student.ukdw.id", "password123", "scope", 400, "data.message", "Scope must be either 'student' or 'teacher'.")
+                Arguments.of("testuser", "testuser@ti.ukdw.ac.id", "password123", "scope", 400, "data.message", "Scope must be either 'student' or 'teacher'.")
         );
     }
 

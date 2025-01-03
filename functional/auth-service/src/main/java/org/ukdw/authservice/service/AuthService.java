@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -139,6 +140,8 @@ public class AuthService {
             return new SigninResponse(accountEntity.getAccessToken(), accountEntity.getRefreshToken());
         } catch (ParseException e) {
             throw new RuntimeException(e);
+        } catch (AuthenticationException e){
+            throw new AuthenticationExceptionImpl("email or password is wrong. email :" + email, e);
         }
     }
 
