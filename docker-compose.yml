@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  auth-service:
+    image: dutaverse/auth-service:1.0.0
+    container_name: auth-service
+    build:
+      context: ./functional/auth-service
+      dockerfile: Dockerfile
+    expose:
+      - "8082"  # Expose the internal port to the Docker network (no port binding to host)
+    environment:
+      - SPRING_CLOUD_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8010/eureka
+    depends_on:
+      - discovery-service
+
+  classroom-service:
+    image: dutaverse/classroom-service:1.0.0
+    container_name: classroom-service
+    build:
+      context: ./functional/classroom-service
+      dockerfile: Dockerfile
+    expose:
+      - "8083"  # Expose the internal port to the Docker network (no port binding to host)
+    environment:
+      - SPRING_CLOUD_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8010/eureka
+    depends_on:
+      - discovery-service
+
+  profile-service:
+    image: dutaverse/profile-service:1.0.0
+    container_name: profile-service
+    build:
+      context: ./functional/profile-service
+      dockerfile: Dockerfile
+    expose:
+      - "8084"  # Expose the internal port to the Docker network (no port binding to host)
+    environment:
+      - SPRING_CLOUD_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8010/eureka
+    depends_on:
+      - discovery-service
+
+  discovery-service:
+    image: dutaverse/discovery-service:1.0.0
+    container_name: discovery-service
+    build:
+      context: ./nonfunctional/discovery-service
+      dockerfile: Dockerfile
+    expose:
+      - "8010"  # Expose the internal port to the Docker network (no port binding to host)
+    ports:
+      - "8010:8010"  # Map Eureka dashboard port to host port
+
+  gateway-service:
+    image: dutaverse/gateway-service:1.0.0
+    container_name: gateway-service
+    build:
+      context: ./nonfunctional/gateway-service
+      dockerfile: Dockerfile
+    expose:
+      - "8081"  # Expose the internal port to the Docker network (no port binding to host)
+    ports:
+      - "8081:8081"  # Map the gateway service port to the host
+    environment:
+      - SPRING_CLOUD_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8010/eureka
+    depends_on:
+      - discovery-service
