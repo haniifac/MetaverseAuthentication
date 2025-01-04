@@ -9,14 +9,17 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>functional</module>
+<!--        Microservices-->
         <module>functional/classroom-service</module>
         <module>functional/auth-service</module>
         <module>functional/profile-service</module>
         <module>nonfunctional/discovery-service</module>
-        <module>nonfunctional</module>
         <module>nonfunctional/gateway-service</module>
-        <module>db</module>
+
+<!--        Hidden Module-->
+<!--        <module>functional</module>-->
+<!--        <module>nonfunctional</module>-->
+<!--        <module>db</module>-->
         <module>functional/common</module>
     </modules>
 
