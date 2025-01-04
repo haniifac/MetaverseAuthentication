@@ -16,11 +16,13 @@
         <module>nonfunctional/discovery-service</module>
         <module>nonfunctional/gateway-service</module>
 
+<!--        Helper Module-->
+        <module>functional/common</module>
+
 <!--        Hidden Module-->
 <!--        <module>functional</module>-->
 <!--        <module>nonfunctional</module>-->
 <!--        <module>db</module>-->
-        <module>functional/common</module>
     </modules>
 
     <properties>
@@ -32,6 +34,7 @@
         <hibernate.version>6.6.0.Final</hibernate.version>
         <jjwt.version>0.12.6</jjwt.version>
         <junit.version>5.9.0</junit.version>
+        <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
     </properties>
 
     <parent>
@@ -146,5 +149,30 @@
             <version>2.15.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot plugin to build executable JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.3.3</version> <!-- Ensure this version matches your parent version -->
+            </plugin>
+
+            <!-- JAR plugin for packaging the app -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>3.4.2</version> &lt;!&ndash; Set your desired version here &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    <archive>-->
+<!--                        <manifestEntries>-->
+<!--                            <Main-Class>org.ukdw.AuthServiceApplication</Main-Class> &lt;!&ndash; Update as needed &ndash;&gt;-->
+<!--                        </manifestEntries>-->
+<!--                    </archive>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
 
 </project>
