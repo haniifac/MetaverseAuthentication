@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   auth-service:
-    image: dutaverse/auth-service:1.0.0
+    image: dutaverse/auth-service:1.0.0-alpine
     container_name: auth-service
     build:
       context: ./functional/auth-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-alpine
     expose:
       - "8082"
 #    ports:
@@ -19,11 +19,11 @@ services:
       - dutaverse-network
 
   classroom-service:
-    image: dutaverse/classroom-service:1.0.0
+    image: dutaverse/classroom-service:1.0.0-alpine
     container_name: classroom-service
     build:
       context: ./functional/classroom-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-alpine
     expose:
       - "8083"
 #    ports:
@@ -36,11 +36,11 @@ services:
       - dutaverse-network
 
   profile-service:
-    image: dutaverse/profile-service:1.0.0
+    image: dutaverse/profile-service:1.0.0-alpine
     container_name: profile-service
     build:
       context: ./functional/profile-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-alpine
     expose:
       - "8084"
 #    ports:
@@ -53,11 +53,11 @@ services:
       - dutaverse-network
 
   discovery-service:
-    image: dutaverse/discovery-service:1.0.0
+    image: dutaverse/discovery-service:1.0.0-alpine
     container_name: discovery-service
     build:
       context: ./nonfunctional/discovery-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-alpine
     expose:
       - "8010"
     ports:
@@ -66,11 +66,11 @@ services:
       - dutaverse-network
 
   gateway-service:
-    image: dutaverse/gateway-service:1.0.0
+    image: dutaverse/gateway-service:1.0.0-alpine
     container_name: gateway-service
     build:
       context: ./nonfunctional/gateway-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-alpine
     expose:
       - "8081"
     ports:
