@@ -82,6 +82,12 @@
 
     <build>
         <plugins>
+            <!-- Use Spring Boot plugin for services -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
             <!-- JAR plugin for packaging the app -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

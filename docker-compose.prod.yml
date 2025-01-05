@@ -81,13 +81,10 @@ services:
       - discovery-service
     networks:
       - dutaverse-network
-#      - tunnel #Please comment on development environment
+      - tunnel
 
 networks:
   dutaverse-network:
     driver: bridge
-
-#  This is for tunneling api gateway to cloudflare tunnel
-#  Must be commented when running on development environment
-#  tunnel:
-#    external: true
+  tunnel:
+    external: true

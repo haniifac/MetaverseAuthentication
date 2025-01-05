@@ -151,13 +151,25 @@
     </dependencies>
 
     <build>
-        <plugins>
+        <pluginManagement>
+            <plugins>
+                <!-- Spring Boot plugin for building executable JARs -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>3.3.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+
+<!--        <plugins>-->
             <!-- Spring Boot plugin to build executable JAR -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.3</version> <!-- Ensure this version matches your parent version -->
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <version>3.3.3</version> &lt;!&ndash; Ensure this version matches your parent version &ndash;&gt;-->
+<!--            </plugin>-->
 
             <!-- JAR plugin for packaging the app -->
 <!--            <plugin>-->
@@ -172,7 +184,7 @@
 <!--                    </archive>-->
 <!--                </configuration>-->
 <!--            </plugin>-->
-        </plugins>
+<!--        </plugins>-->
     </build>
 
 </project>

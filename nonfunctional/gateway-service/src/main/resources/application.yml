@@ -51,7 +51,7 @@ eureka:
 server:
   port: 8081
 
-service:
-  user:
-    url:
-      base: http://localhost:8082/auth
+#service:
+#  user:
+#    url:
+#      base: lb://auth-service/auth

@@ -1,7 +1,10 @@
 package org.ukdw;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,20 +25,26 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthorizationHeaderFilter.class);
     private final WebClient.Builder webClientBuilder;
+    private final LoadBalancerClient loadBalancerClient;
 
-    public AuthorizationHeaderFilter(WebClient.Builder webClientBuilder) {
+//    @Autowired
+//    private LoadBalancerClient loadBalancerClient;
+
+//    @Value("${service.user.url.base}")
+//    private String authServiceUrl;
+//    private String authServiceUrl = resolveServiceUrl();
+
+    public AuthorizationHeaderFilter(WebClient.Builder webClientBuilder, LoadBalancerClient loadBalancerClient) {
         super(Config.class);
         this.webClientBuilder = webClientBuilder;
+        this.loadBalancerClient = loadBalancerClient;
     }
 
     public static class Config {
         // Put configuration properties here
     }
-
-
-    @Value("${service.user.url.base}")
-    private String userServiceUrl;
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -79,29 +88,60 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
+//        ResponseWrapper errorResponse = new ResponseWrapper();
+//        errorResponse.setMessage(err);
+//        errorResponse.setStatus(httpStatus.value());
+
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-
         return response.setComplete();
+
+//        return response.writeWith(Mono.just(response.bufferFactory().wrap(errorResponse.toString().getBytes())));
     }
 
 
     @LoadBalanced
     private Mono<VerifyTokenDto> verifyTokenWithUserService(String token) {
+        String authServiceUrl = resolveServiceUrl("auth-service"); // Resolve the service URL dynamically
+
         return webClientBuilder.build()
                 .get()
-                .uri(userServiceUrl + "/verify")
+                .uri(authServiceUrl + "/auth/verify")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Client Error")))
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Server Error")))
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+//                    log.error("4xx Client Error: {}", clientResponse.statusCode());
+                    clientResponse.bodyToMono(String.class).doOnTerminate(() -> {
+                        log.error("4xx Client Error: {} - Response Body: {}", clientResponse.statusCode(), clientResponse.toString());
+                    }).subscribe();
+                    return Mono.error(new RuntimeException("Client Error"));
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+//                    log.error("5xx Server Error: {}", clientResponse.statusCode());
+                    clientResponse.bodyToMono(String.class).doOnTerminate(() -> {
+                        log.error("5xx Server Error: {} - Response Body: {}", clientResponse.statusCode(), clientResponse.toString());
+                    }).subscribe();
+                    return Mono.error(new RuntimeException("Server Error"));
+                })
                 .bodyToMono(new ParameterizedTypeReference<ResponseWrapper<VerifyTokenDto>>() {})
                 .handle((responseWrapper, sink) -> {
+//                    log.info("RESPONSE :{}", responseWrapper.getData().toString());
+                    log.error("Token verification status: {}", responseWrapper.getStatus());
                     if (responseWrapper.getStatus() == 200) {
                         sink.next(responseWrapper.getData());
                     } else {
                         sink.error(new WebClientResponseException(responseWrapper.getMessage(), responseWrapper.getStatus(), null, null, null, null));
                     }
                 });
+    }
+
+    private String resolveServiceUrl(String serviceName) {
+        var serviceInstance = loadBalancerClient.choose(serviceName);
+        if (serviceInstance != null) {
+            log.info(serviceInstance.getUri().toString());
+            return serviceInstance.getUri().toString();
+        } else {
+            throw new IllegalStateException("Service not available: " + serviceName);
+        }
     }
 }
