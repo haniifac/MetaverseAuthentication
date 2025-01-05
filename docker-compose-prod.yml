@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   auth-service:
-    image: dutaverse/auth-service:1.0.0-alpine
+    image: haniifac/auth-service:1.0.0-alpine
     container_name: auth-service
     build:
       context: ./functional/auth-service
@@ -19,7 +19,7 @@ services:
       - dutaverse-network
 
   classroom-service:
-    image: dutaverse/classroom-service:1.0.0-alpine
+    image: haniifac/classroom-service:1.0.0-alpine
     container_name: classroom-service
     build:
       context: ./functional/classroom-service
@@ -36,7 +36,7 @@ services:
       - dutaverse-network
 
   profile-service:
-    image: dutaverse/profile-service:1.0.0-alpine
+    image: haniifac/profile-service:1.0.0-alpine
     container_name: profile-service
     build:
       context: ./functional/profile-service
@@ -53,7 +53,7 @@ services:
       - dutaverse-network
 
   discovery-service:
-    image: dutaverse/discovery-service:1.0.0-alpine
+    image: haniifac/discovery-service:1.0.0-alpine
     container_name: discovery-service
     build:
       context: ./nonfunctional/discovery-service
@@ -66,7 +66,7 @@ services:
       - dutaverse-network
 
   gateway-service:
-    image: dutaverse/gateway-service:1.0.0-alpine
+    image: haniifac/gateway-service:1.0.0-alpine
     container_name: gateway-service
     build:
       context: ./nonfunctional/gateway-service
